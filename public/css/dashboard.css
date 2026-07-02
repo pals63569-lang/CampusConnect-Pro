@@ -1,0 +1,2596 @@
+/* ======================================================
+   CAMPUSCONNECT PRO
+   DASHBOARD CSS
+   PART 1
+   Layout + Sidebar + Navbar
+======================================================*/
+
+.dashboard-wrapper{
+    display:flex;
+    min-height:100vh;
+    background:var(--bg-primary);
+}
+
+/*==============================
+ Sidebar
+==============================*/
+
+.sidebar{
+
+    width:280px;
+
+    background:rgba(15,23,42,.95);
+
+    backdrop-filter:blur(20px);
+
+    border-right:1px solid rgba(255,255,255,.08);
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:space-between;
+
+    transition:.35s;
+
+    position:fixed;
+
+    left:0;
+
+    top:0;
+
+    bottom:0;
+
+    z-index:1000;
+
+    overflow:hidden;
+
+}
+
+.sidebar::before{
+
+content:"";
+
+position:absolute;
+
+top:-40%;
+
+right:-20%;
+
+width:320px;
+
+height:320px;
+
+background:radial-gradient(circle,#6366f133,transparent);
+
+pointer-events:none;
+
+}
+
+.sidebar-brand{
+
+padding:35px 30px;
+
+display:flex;
+
+align-items:center;
+
+gap:15px;
+
+font-size:1.6rem;
+
+font-weight:700;
+
+color:#fff;
+
+border-bottom:1px solid rgba(255,255,255,.08);
+
+}
+
+.sidebar-brand i{
+
+font-size:2rem;
+
+background:var(--accent-gradient);
+
+-webkit-background-clip:text;
+
+-webkit-text-fill-color:transparent;
+
+}
+
+.sidebar-menu{
+
+padding:25px 15px;
+
+display:flex;
+
+flex-direction:column;
+
+gap:8px;
+
+list-style:none;
+
+flex:1;
+
+}
+
+.sidebar-link{
+
+display:flex;
+
+align-items:center;
+
+gap:16px;
+
+padding:15px 18px;
+
+border-radius:16px;
+
+color:var(--text-secondary);
+
+text-decoration:none;
+
+font-weight:500;
+
+transition:.35s;
+
+position:relative;
+
+overflow:hidden;
+
+}
+
+.sidebar-link i{
+
+width:22px;
+
+font-size:1.1rem;
+
+}
+
+.sidebar-link::before{
+
+content:"";
+
+position:absolute;
+
+left:-100%;
+
+top:0;
+
+width:100%;
+
+height:100%;
+
+background:rgba(255,255,255,.08);
+
+transition:.5s;
+
+}
+
+.sidebar-link:hover::before{
+
+left:100%;
+
+}
+
+.sidebar-link:hover{
+
+background:rgba(255,255,255,.06);
+
+color:#fff;
+
+transform:translateX(8px);
+
+}
+
+.sidebar-link.active{
+
+background:var(--accent-gradient);
+
+color:#fff;
+
+box-shadow:0 12px 30px rgba(99,102,241,.35);
+
+}
+
+.sidebar-footer{
+
+padding:20px;
+
+border-top:1px solid rgba(255,255,255,.08);
+
+}
+
+/*==============================
+ Main Content
+==============================*/
+
+.main-content{
+
+margin-left:280px;
+
+flex:1;
+
+padding:35px;
+
+min-height:100vh;
+
+}
+
+/*==============================
+ Top Navbar
+==============================*/
+
+.topbar{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+margin-bottom:35px;
+
+gap:20px;
+
+flex-wrap:wrap;
+
+}
+
+/*==============================
+ Search Box
+==============================*/
+
+.search-box{
+
+position:relative;
+
+width:350px;
+
+max-width:100%;
+
+}
+
+.search-box input{
+
+width:100%;
+
+padding:14px 18px 14px 48px;
+
+background:rgba(255,255,255,.05);
+
+border:1px solid rgba(255,255,255,.08);
+
+border-radius:50px;
+
+color:#fff;
+
+font-size:.95rem;
+
+transition:.3s;
+
+}
+
+.search-box input:focus{
+
+outline:none;
+
+border-color:#6366f1;
+
+box-shadow:0 0 20px rgba(99,102,241,.25);
+
+}
+
+.search-box i{
+
+position:absolute;
+
+left:18px;
+
+top:50%;
+
+transform:translateY(-50%);
+
+color:var(--text-secondary);
+
+}
+
+/*==============================
+ Topbar Right
+==============================*/
+
+.topbar-right{
+
+display:flex;
+
+align-items:center;
+
+gap:18px;
+
+}
+
+/* Notification */
+
+.notification-btn{
+
+width:48px;
+
+height:48px;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+background:rgba(255,255,255,.05);
+
+border-radius:50%;
+
+cursor:pointer;
+
+position:relative;
+
+transition:.3s;
+
+}
+
+.notification-btn:hover{
+
+background:rgba(255,255,255,.08);
+
+transform:translateY(-3px);
+
+}
+
+.notification-count{
+
+position:absolute;
+
+top:8px;
+
+right:8px;
+
+width:18px;
+
+height:18px;
+
+border-radius:50%;
+
+background:#ef4444;
+
+color:#fff;
+
+font-size:11px;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+font-weight:600;
+
+}
+
+/*==============================
+ User Profile
+==============================*/
+
+.profile-box{
+
+display:flex;
+
+align-items:center;
+
+gap:14px;
+
+padding:8px 14px;
+
+background:rgba(255,255,255,.05);
+
+border-radius:50px;
+
+cursor:pointer;
+
+transition:.3s;
+
+}
+
+.profile-box:hover{
+
+background:rgba(255,255,255,.08);
+
+}
+
+.profile-box img{
+
+width:46px;
+
+height:46px;
+
+border-radius:50%;
+
+object-fit:cover;
+
+border:2px solid #6366f1;
+
+}
+
+.profile-info h6{
+
+margin:0;
+
+font-size:.95rem;
+
+font-weight:600;
+
+color:#fff;
+
+}
+
+.profile-info span{
+
+font-size:.75rem;
+
+color:var(--text-secondary);
+
+}
+
+/*==============================
+ Mobile Toggle
+==============================*/
+
+.sidebar-toggle{
+
+display:none;
+
+font-size:1.6rem;
+
+cursor:pointer;
+
+color:#fff;
+
+}
+
+/*==============================
+ Responsive
+==============================*/
+
+@media(max-width:991px){
+
+.sidebar{
+
+left:-280px;
+
+}
+
+.sidebar.show{
+
+left:0;
+
+}
+
+.main-content{
+
+margin-left:0;
+
+padding:25px;
+
+}
+
+.sidebar-toggle{
+
+display:block;
+
+}
+
+.search-box{
+
+width:100%;
+
+}
+
+.topbar{
+
+flex-direction:column;
+
+align-items:flex-start;
+
+}
+
+}
+
+@media(max-width:576px){
+
+.main-content{
+
+padding:18px;
+
+}
+
+.profile-info{
+
+display:none;
+
+}
+
+.topbar-right{
+
+width:100%;
+
+justify-content:space-between;
+
+}
+
+}
+/* ======================================================
+   CAMPUSCONNECT PRO
+   DASHBOARD CSS
+   PART 2
+   Cards • Charts • Analytics • Widgets
+======================================================*/
+
+/*==============================
+ Dashboard Grid
+==============================*/
+
+.dashboard-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:25px;
+    margin-bottom:35px;
+}
+
+/*==============================
+ Statistics Card
+==============================*/
+
+.stat-card{
+
+    position:relative;
+
+    overflow:hidden;
+
+    padding:30px;
+
+    border-radius:24px;
+
+    background:rgba(255,255,255,.05);
+
+    backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    transition:.35s;
+
+}
+
+.stat-card:hover{
+
+    transform:translateY(-10px);
+
+    box-shadow:0 20px 40px rgba(99,102,241,.25);
+
+}
+
+.stat-card::before{
+
+content:"";
+
+position:absolute;
+
+width:250px;
+
+height:250px;
+
+background:radial-gradient(circle,#6366f122,transparent);
+
+right:-120px;
+
+top:-120px;
+
+}
+
+.stat-header{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+margin-bottom:25px;
+
+}
+
+.stat-icon{
+
+width:65px;
+
+height:65px;
+
+border-radius:20px;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+font-size:28px;
+
+color:#fff;
+
+background:var(--accent-gradient);
+
+box-shadow:0 15px 30px rgba(99,102,241,.35);
+
+}
+
+.stat-value{
+
+font-size:2.7rem;
+
+font-weight:700;
+
+margin:15px 0;
+
+color:#fff;
+
+}
+
+.stat-title{
+
+font-size:.9rem;
+
+letter-spacing:1px;
+
+text-transform:uppercase;
+
+color:var(--text-secondary);
+
+}
+
+.stat-growth{
+
+display:inline-flex;
+
+align-items:center;
+
+gap:6px;
+
+margin-top:15px;
+
+padding:6px 12px;
+
+border-radius:30px;
+
+background:rgba(16,185,129,.12);
+
+color:#10b981;
+
+font-weight:600;
+
+font-size:.85rem;
+
+}
+
+/*==============================
+ Chart Card
+==============================*/
+
+.chart-card{
+
+background:rgba(255,255,255,.05);
+
+border-radius:25px;
+
+padding:30px;
+
+border:1px solid rgba(255,255,255,.08);
+
+backdrop-filter:blur(18px);
+
+margin-bottom:30px;
+
+transition:.35s;
+
+}
+
+.chart-card:hover{
+
+transform:translateY(-6px);
+
+box-shadow:0 18px 40px rgba(99,102,241,.20);
+
+}
+
+.chart-header{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+margin-bottom:25px;
+
+}
+
+.chart-title{
+
+font-size:1.25rem;
+
+font-weight:700;
+
+color:#fff;
+
+}
+
+.chart-filter{
+
+padding:10px 18px;
+
+border-radius:40px;
+
+background:rgba(255,255,255,.06);
+
+color:var(--text-secondary);
+
+border:none;
+
+}
+
+/*==============================
+ Calendar Card
+==============================*/
+
+.calendar-card{
+
+padding:30px;
+
+border-radius:24px;
+
+background:rgba(255,255,255,.05);
+
+border:1px solid rgba(255,255,255,.08);
+
+backdrop-filter:blur(18px);
+
+transition:.35s;
+
+}
+
+.calendar-card:hover{
+
+transform:translateY(-8px);
+
+}
+
+.calendar-title{
+
+font-size:1.2rem;
+
+font-weight:700;
+
+margin-bottom:25px;
+
+}
+
+.calendar-event{
+
+display:flex;
+
+align-items:center;
+
+justify-content:space-between;
+
+padding:15px 0;
+
+border-bottom:1px solid rgba(255,255,255,.08);
+
+}
+
+.calendar-event:last-child{
+
+border:none;
+
+}
+
+.event-dot{
+
+width:12px;
+
+height:12px;
+
+border-radius:50%;
+
+background:#6366f1;
+
+margin-right:12px;
+
+}
+
+.event-info{
+
+display:flex;
+
+align-items:center;
+
+}
+
+/*==============================
+ Recent Activity
+==============================*/
+
+.activity-card{
+
+background:rgba(255,255,255,.05);
+
+padding:30px;
+
+border-radius:24px;
+
+border:1px solid rgba(255,255,255,.08);
+
+}
+
+.activity-item{
+
+display:flex;
+
+gap:18px;
+
+padding:18px 0;
+
+border-bottom:1px solid rgba(255,255,255,.06);
+
+}
+
+.activity-item:last-child{
+
+border:none;
+
+}
+
+.activity-icon{
+
+width:52px;
+
+height:52px;
+
+border-radius:50%;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+background:var(--accent-gradient);
+
+color:#fff;
+
+font-size:20px;
+
+}
+
+.activity-title{
+
+font-weight:600;
+
+color:#fff;
+
+}
+
+.activity-time{
+
+font-size:.8rem;
+
+color:var(--text-secondary);
+
+margin-top:6px;
+
+}
+
+/*==============================
+ Progress Widget
+==============================*/
+
+.progress-widget{
+
+margin-top:25px;
+
+}
+
+.progress-row{
+
+margin-bottom:20px;
+
+}
+
+.progress-row span{
+
+display:flex;
+
+justify-content:space-between;
+
+margin-bottom:8px;
+
+font-size:.9rem;
+
+}
+
+.progress{
+
+height:10px;
+
+border-radius:30px;
+
+background:rgba(255,255,255,.08);
+
+overflow:hidden;
+
+}
+
+.progress-bar{
+
+height:100%;
+
+background:var(--accent-gradient);
+
+border-radius:30px;
+
+animation:loadBar 2s ease;
+
+}
+
+@keyframes loadBar{
+
+from{
+
+width:0;
+
+}
+
+}
+
+/*==============================
+ Team Members
+==============================*/
+
+.team-card{
+
+background:rgba(255,255,255,.05);
+
+padding:25px;
+
+border-radius:24px;
+
+border:1px solid rgba(255,255,255,.08);
+
+}
+
+.team-member{
+
+display:flex;
+
+align-items:center;
+
+justify-content:space-between;
+
+padding:15px 0;
+
+border-bottom:1px solid rgba(255,255,255,.06);
+
+}
+
+.team-member:last-child{
+
+border:none;
+
+}
+
+.team-info{
+
+display:flex;
+
+align-items:center;
+
+gap:15px;
+
+}
+
+.team-info img{
+
+width:50px;
+
+height:50px;
+
+border-radius:50%;
+
+object-fit:cover;
+
+border:2px solid #6366f1;
+
+}
+
+.team-name{
+
+font-weight:600;
+
+color:#fff;
+
+}
+
+.team-role{
+
+font-size:.8rem;
+
+color:var(--text-secondary);
+
+}
+
+/*==============================
+ Dashboard Animation
+==============================*/
+
+.stat-card,
+.chart-card,
+.calendar-card,
+.activity-card,
+.team-card{
+
+animation:fadeUp .7s ease forwards;
+
+opacity:0;
+
+}
+
+.stat-card:nth-child(1){animation-delay:.1s;}
+.stat-card:nth-child(2){animation-delay:.2s;}
+.stat-card:nth-child(3){animation-delay:.3s;}
+.stat-card:nth-child(4){animation-delay:.4s;}
+
+@keyframes fadeUp{
+
+from{
+
+opacity:0;
+
+transform:translateY(35px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+}
+/*=========================================================
+  CAMPUSCONNECT PRO
+  DASHBOARD CSS
+  PART 3A
+  Tables • Search • Pagination
+=========================================================*/
+
+/*==============================
+Section Header
+==============================*/
+
+.section-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+    flex-wrap:wrap;
+    gap:20px;
+}
+
+.section-title{
+    font-size:1.5rem;
+    font-weight:700;
+    color:var(--text-primary);
+}
+
+.section-subtitle{
+    color:var(--text-secondary);
+    margin-top:6px;
+}
+
+/*==============================
+Search Bar
+==============================*/
+
+.table-search{
+    position:relative;
+    width:320px;
+    max-width:100%;
+}
+
+.table-search input{
+    width:100%;
+    height:48px;
+    padding:0 18px 0 45px;
+    border-radius:50px;
+    border:1px solid rgba(255,255,255,.08);
+    background:rgba(255,255,255,.05);
+    color:var(--text-primary);
+    transition:.3s;
+}
+
+.table-search input:focus{
+    outline:none;
+    border-color:var(--accent-indigo);
+    box-shadow:0 0 18px rgba(99,102,241,.25);
+}
+
+.table-search i{
+    position:absolute;
+    left:18px;
+    top:50%;
+    transform:translateY(-50%);
+    color:var(--text-secondary);
+}
+
+/*==============================
+Table Card
+==============================*/
+
+.table-card{
+    background:rgba(255,255,255,.05);
+    backdrop-filter:blur(18px);
+    border-radius:24px;
+    border:1px solid rgba(255,255,255,.08);
+    overflow:hidden;
+}
+
+/*==============================
+Table
+==============================*/
+
+.dashboard-table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.dashboard-table thead{
+    background:rgba(255,255,255,.04);
+}
+
+.dashboard-table th{
+    padding:18px;
+    text-align:left;
+    font-size:.9rem;
+    font-weight:600;
+    color:var(--text-secondary);
+    border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.dashboard-table td{
+    padding:18px;
+    color:var(--text-primary);
+    border-bottom:1px solid rgba(255,255,255,.05);
+    transition:.3s;
+}
+
+.dashboard-table tbody tr{
+    transition:.3s;
+}
+
+.dashboard-table tbody tr:hover{
+    background:rgba(255,255,255,.04);
+}
+
+/*==============================
+Avatar
+==============================*/
+
+.table-user{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.table-user img{
+    width:45px;
+    height:45px;
+    border-radius:50%;
+    object-fit:cover;
+}
+
+.table-user h6{
+    margin:0;
+    font-size:.95rem;
+}
+
+.table-user span{
+    font-size:.8rem;
+    color:var(--text-secondary);
+}
+
+/*==============================
+Status Badge
+==============================*/
+
+.status{
+    display:inline-flex;
+    align-items:center;
+    padding:8px 16px;
+    border-radius:30px;
+    font-size:.8rem;
+    font-weight:600;
+}
+
+.status-active{
+    background:rgba(16,185,129,.15);
+    color:#10b981;
+}
+
+.status-pending{
+    background:rgba(245,158,11,.15);
+    color:#f59e0b;
+}
+
+.status-cancelled{
+    background:rgba(239,68,68,.15);
+    color:#ef4444;
+}
+
+.status-completed{
+    background:rgba(99,102,241,.15);
+    color:#6366f1;
+}
+
+/*==============================
+Action Buttons
+==============================*/
+
+.table-actions{
+    display:flex;
+    gap:10px;
+}
+
+.action-btn{
+    width:40px;
+    height:40px;
+    border-radius:12px;
+    border:none;
+    cursor:pointer;
+    transition:.3s;
+    color:#fff;
+}
+
+.view-btn{
+    background:#3b82f6;
+}
+
+.edit-btn{
+    background:#10b981;
+}
+
+.delete-btn{
+    background:#ef4444;
+}
+
+.action-btn:hover{
+    transform:translateY(-4px);
+}
+
+/*==============================
+Pagination
+==============================*/
+
+.pagination-wrap{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px;
+    flex-wrap:wrap;
+    gap:20px;
+}
+
+.pagination{
+    display:flex;
+    gap:10px;
+}
+
+.page-btn{
+    width:42px;
+    height:42px;
+    border-radius:12px;
+    border:none;
+    cursor:pointer;
+    background:rgba(255,255,255,.05);
+    color:var(--text-primary);
+    transition:.3s;
+}
+
+.page-btn:hover{
+    background:var(--accent-gradient);
+    color:#fff;
+}
+
+.page-btn.active{
+    background:var(--accent-gradient);
+    color:#fff;
+}
+
+/*==============================
+Empty State
+==============================*/
+
+.empty-state{
+    padding:80px 20px;
+    text-align:center;
+}
+
+.empty-state i{
+    font-size:70px;
+    color:var(--accent-indigo);
+    margin-bottom:20px;
+}
+
+.empty-state h4{
+    margin-bottom:10px;
+}
+
+.empty-state p{
+    color:var(--text-secondary);
+}
+
+/*==============================
+Responsive
+==============================*/
+
+@media(max-width:991px){
+
+.dashboard-table{
+    min-width:900px;
+}
+
+.table-card{
+    overflow-x:auto;
+}
+
+.pagination-wrap{
+    flex-direction:column;
+}
+
+}
+
+@media(max-width:576px){
+
+.section-header{
+    flex-direction:column;
+    align-items:flex-start;
+}
+
+.table-search{
+    width:100%;
+}
+
+}
+/*=========================================================
+  CAMPUSCONNECT PRO
+  DASHBOARD CSS
+  PART 3B
+  Profile • Forms • Notifications • Settings
+=========================================================*/
+
+/*==============================
+Profile Card
+==============================*/
+
+.profile-card{
+    background:rgba(255,255,255,.05);
+    backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:25px;
+    padding:35px;
+    text-align:center;
+    transition:.35s;
+}
+
+.profile-card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 20px 40px rgba(99,102,241,.25);
+}
+
+.profile-avatar{
+    width:130px;
+    height:130px;
+    border-radius:50%;
+    object-fit:cover;
+    border:5px solid #6366f1;
+    margin:auto;
+    display:block;
+}
+
+.profile-name{
+    margin-top:20px;
+    font-size:1.6rem;
+    font-weight:700;
+}
+
+.profile-role{
+    color:var(--text-secondary);
+    margin-top:6px;
+}
+
+.profile-stats{
+    display:flex;
+    justify-content:space-around;
+    margin-top:30px;
+}
+
+.profile-stat h3{
+    font-size:1.5rem;
+    margin-bottom:5px;
+}
+
+.profile-stat span{
+    color:var(--text-secondary);
+    font-size:.85rem;
+}
+
+/*==============================
+Upload Button
+==============================*/
+
+.upload-btn{
+    display:inline-block;
+    margin-top:20px;
+    padding:12px 28px;
+    border-radius:40px;
+    background:var(--accent-gradient);
+    color:#fff;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.upload-btn:hover{
+    transform:translateY(-3px);
+}
+
+/*==============================
+Forms
+==============================*/
+
+.form-card{
+    background:rgba(255,255,255,.05);
+    backdrop-filter:blur(20px);
+    border-radius:25px;
+    border:1px solid rgba(255,255,255,.08);
+    padding:35px;
+}
+
+.form-title{
+    font-size:1.3rem;
+    margin-bottom:25px;
+}
+
+.form-group{
+    margin-bottom:22px;
+}
+
+.form-group label{
+    display:block;
+    margin-bottom:8px;
+    font-weight:500;
+}
+
+.form-control{
+    width:100%;
+    height:52px;
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,.08);
+    background:rgba(255,255,255,.05);
+    color:#fff;
+    padding:0 18px;
+    transition:.3s;
+}
+
+textarea.form-control{
+    height:130px;
+    padding-top:15px;
+    resize:none;
+}
+
+.form-control:focus{
+    outline:none;
+    border-color:#6366f1;
+    box-shadow:0 0 20px rgba(99,102,241,.25);
+}
+
+/*==============================
+Buttons
+==============================*/
+
+.save-btn{
+
+background:var(--accent-gradient);
+
+padding:14px 35px;
+
+border:none;
+
+border-radius:40px;
+
+color:#fff;
+
+font-weight:600;
+
+transition:.3s;
+
+cursor:pointer;
+
+}
+
+.save-btn:hover{
+
+transform:translateY(-4px);
+
+box-shadow:0 15px 30px rgba(99,102,241,.30);
+
+}
+
+/*==============================
+Notifications
+==============================*/
+
+.notification-card{
+
+background:rgba(255,255,255,.05);
+
+padding:22px;
+
+border-radius:20px;
+
+border:1px solid rgba(255,255,255,.08);
+
+display:flex;
+
+gap:18px;
+
+margin-bottom:18px;
+
+transition:.3s;
+
+}
+
+.notification-card:hover{
+
+transform:translateX(8px);
+
+background:rgba(255,255,255,.07);
+
+}
+
+.notification-icon{
+
+width:55px;
+
+height:55px;
+
+border-radius:50%;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+background:var(--accent-gradient);
+
+color:#fff;
+
+font-size:20px;
+
+}
+
+.notification-title{
+
+font-weight:600;
+
+margin-bottom:5px;
+
+}
+
+.notification-time{
+
+font-size:.8rem;
+
+color:var(--text-secondary);
+
+}
+
+/*==============================
+Messages
+==============================*/
+
+.message-card{
+
+display:flex;
+
+align-items:center;
+
+gap:15px;
+
+padding:18px;
+
+border-radius:18px;
+
+background:rgba(255,255,255,.05);
+
+margin-bottom:15px;
+
+transition:.3s;
+
+}
+
+.message-card:hover{
+
+background:rgba(255,255,255,.08);
+
+}
+
+.message-card img{
+
+width:55px;
+
+height:55px;
+
+border-radius:50%;
+
+object-fit:cover;
+
+}
+
+.message-name{
+
+font-weight:600;
+
+}
+
+.message-text{
+
+font-size:.85rem;
+
+color:var(--text-secondary);
+
+margin-top:5px;
+
+}
+
+/*==============================
+Settings
+==============================*/
+
+.setting-item{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+padding:20px 0;
+
+border-bottom:1px solid rgba(255,255,255,.08);
+
+}
+
+.setting-item:last-child{
+
+border:none;
+
+}
+
+.setting-title{
+
+font-weight:600;
+
+}
+
+.setting-desc{
+
+font-size:.82rem;
+
+color:var(--text-secondary);
+
+margin-top:5px;
+
+}
+
+/*==============================
+Toggle Switch
+==============================*/
+
+.switch{
+
+position:relative;
+
+width:60px;
+
+height:30px;
+
+}
+
+.switch input{
+
+display:none;
+
+}
+
+.slider{
+
+position:absolute;
+
+top:0;
+
+left:0;
+
+right:0;
+
+bottom:0;
+
+background:#444;
+
+border-radius:30px;
+
+cursor:pointer;
+
+transition:.3s;
+
+}
+
+.slider:before{
+
+content:"";
+
+position:absolute;
+
+width:24px;
+
+height:24px;
+
+left:3px;
+
+top:3px;
+
+background:#fff;
+
+border-radius:50%;
+
+transition:.3s;
+
+}
+
+input:checked + .slider{
+
+background:#6366f1;
+
+}
+
+input:checked + .slider:before{
+
+transform:translateX(30px);
+
+}
+
+/*==============================
+Responsive
+==============================*/
+
+@media(max-width:768px){
+
+.profile-stats{
+
+flex-direction:column;
+
+gap:20px;
+
+}
+
+.notification-card{
+
+flex-direction:column;
+
+align-items:flex-start;
+
+}
+
+.message-card{
+
+flex-direction:column;
+
+text-align:center;
+
+}
+
+.setting-item{
+
+flex-direction:column;
+
+align-items:flex-start;
+
+gap:15px;
+
+}
+
+}
+/*=========================================================
+  CAMPUSCONNECT PRO
+  DASHBOARD CSS
+  PART 4
+  Analytics • Leaderboard • Calendar • QR Scanner
+=========================================================*/
+
+/*==============================
+Leaderboard
+==============================*/
+
+.leaderboard-card{
+    background:rgba(255,255,255,.05);
+    backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:25px;
+    padding:30px;
+}
+
+.leaderboard-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px 0;
+    border-bottom:1px solid rgba(255,255,255,.08);
+    transition:.3s;
+}
+
+.leaderboard-item:last-child{
+    border:none;
+}
+
+.leaderboard-item:hover{
+    transform:translateX(8px);
+}
+
+.rank{
+    width:45px;
+    height:45px;
+    border-radius:50%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:var(--accent-gradient);
+    color:#fff;
+    font-weight:700;
+}
+
+.rank.gold{
+    background:linear-gradient(135deg,#FFD700,#FFB800);
+}
+
+.rank.silver{
+    background:linear-gradient(135deg,#d1d5db,#9ca3af);
+}
+
+.rank.bronze{
+    background:linear-gradient(135deg,#cd7f32,#92400e);
+}
+
+/*==============================
+Achievement Cards
+==============================*/
+
+.achievement-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:25px;
+}
+
+.achievement-card{
+    background:rgba(255,255,255,.05);
+    border-radius:22px;
+    padding:30px;
+    text-align:center;
+    border:1px solid rgba(255,255,255,.08);
+    transition:.35s;
+}
+
+.achievement-card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 20px 40px rgba(99,102,241,.25);
+}
+
+.achievement-icon{
+    width:90px;
+    height:90px;
+    margin:auto;
+    border-radius:50%;
+    background:var(--accent-gradient);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:#fff;
+    font-size:34px;
+}
+
+.achievement-title{
+    margin-top:20px;
+    font-size:1.2rem;
+    font-weight:700;
+}
+
+.achievement-text{
+    margin-top:10px;
+    color:var(--text-secondary);
+}
+
+/*==============================
+Analytics Cards
+==============================*/
+
+.analytics-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+    gap:25px;
+}
+
+.analytics-card{
+    background:rgba(255,255,255,.05);
+    border-radius:24px;
+    padding:30px;
+    border:1px solid rgba(255,255,255,.08);
+    transition:.35s;
+}
+
+.analytics-card:hover{
+    transform:translateY(-8px);
+}
+
+.analytics-title{
+    font-size:1.1rem;
+    margin-bottom:25px;
+    font-weight:600;
+}
+
+/*==============================
+Calendar Widget
+==============================*/
+
+.calendar-widget{
+    background:rgba(255,255,255,.05);
+    border-radius:25px;
+    padding:30px;
+    border:1px solid rgba(255,255,255,.08);
+}
+
+.calendar-header{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:25px;
+}
+
+.calendar-day{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:10px;
+}
+
+.calendar-date{
+    aspect-ratio:1;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    border-radius:12px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.calendar-date:hover{
+    background:var(--accent-gradient);
+    color:#fff;
+}
+
+.calendar-date.active{
+    background:var(--accent-gradient);
+    color:#fff;
+}
+
+/*==============================
+Circular Progress
+==============================*/
+
+.progress-circle{
+    width:160px;
+    height:160px;
+    margin:auto;
+    border-radius:50%;
+    background:conic-gradient(
+        #6366f1 0deg,
+        #6366f1 280deg,
+        rgba(255,255,255,.08) 280deg
+    );
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.progress-circle::before{
+    content:"85%";
+    width:125px;
+    height:125px;
+    border-radius:50%;
+    background:var(--bg-primary);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:#fff;
+    font-size:28px;
+    font-weight:700;
+}
+
+/*==============================
+QR Scanner
+==============================*/
+
+.qr-scanner{
+    background:#000;
+    border-radius:25px;
+    overflow:hidden;
+    position:relative;
+    border:4px solid var(--accent-indigo);
+}
+
+.qr-video{
+    width:100%;
+    display:block;
+}
+
+.qr-frame{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    width:220px;
+    height:220px;
+    border:4px solid #10b981;
+    border-radius:20px;
+    animation:scannerPulse 2s infinite;
+}
+
+@keyframes scannerPulse{
+
+0%,100%{
+transform:translate(-50%,-50%) scale(.95);
+}
+
+50%{
+transform:translate(-50%,-50%) scale(1);
+}
+
+}
+
+/*==============================
+Upload Box
+==============================*/
+
+.upload-area{
+
+padding:50px;
+
+border:2px dashed rgba(255,255,255,.15);
+
+border-radius:20px;
+
+text-align:center;
+
+transition:.3s;
+
+cursor:pointer;
+
+}
+
+.upload-area:hover{
+
+border-color:#6366f1;
+
+background:rgba(99,102,241,.08);
+
+}
+
+.upload-area i{
+
+font-size:60px;
+
+margin-bottom:20px;
+
+color:#6366f1;
+
+}
+
+/*==============================
+Hover Glow
+==============================*/
+
+.glow-card{
+
+position:relative;
+
+overflow:hidden;
+
+}
+
+.glow-card::after{
+
+content:"";
+
+position:absolute;
+
+top:-50%;
+
+left:-50%;
+
+width:200%;
+
+height:200%;
+
+background:linear-gradient(
+45deg,
+transparent,
+rgba(255,255,255,.08),
+transparent
+);
+
+transform:rotate(45deg);
+
+transition:.8s;
+
+}
+
+.glow-card:hover::after{
+
+left:120%;
+
+}
+
+/*==============================
+Animation
+==============================*/
+
+@keyframes fadeScale{
+
+from{
+
+opacity:0;
+
+transform:scale(.9);
+
+}
+
+to{
+
+opacity:1;
+
+transform:scale(1);
+
+}
+
+}
+
+.analytics-card,
+.leaderboard-card,
+.achievement-card{
+
+animation:fadeScale .6s ease;
+
+}
+/*=========================================================
+  CAMPUSCONNECT PRO
+  DASHBOARD CSS
+  PART 5
+  Final Polish • Responsive • Loader • Modal • Utilities
+=========================================================*/
+
+/*==============================
+Loading Spinner
+==============================*/
+
+.loader-wrapper{
+    position:fixed;
+    inset:0;
+    background:rgba(10,15,30,.95);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:99999;
+}
+
+.loader{
+    width:70px;
+    height:70px;
+    border:6px solid rgba(255,255,255,.08);
+    border-top:6px solid #6366f1;
+    border-radius:50%;
+    animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+/*==============================
+Glass Modal
+==============================*/
+
+.glass-modal{
+    background:rgba(17,24,39,.92);
+    backdrop-filter:blur(20px);
+    border-radius:25px;
+    border:1px solid rgba(255,255,255,.08);
+    padding:35px;
+    box-shadow:0 30px 60px rgba(0,0,0,.45);
+}
+
+.glass-modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.glass-modal-title{
+    font-size:1.5rem;
+    font-weight:700;
+}
+
+.modal-close{
+    width:45px;
+    height:45px;
+    border-radius:50%;
+    border:none;
+    background:rgba(255,255,255,.08);
+    color:#fff;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.modal-close:hover{
+    background:#ef4444;
+}
+
+/*==============================
+Toast
+==============================*/
+
+.toast-card{
+    position:fixed;
+    top:30px;
+    right:30px;
+    width:330px;
+    background:rgba(17,24,39,.95);
+    border-radius:20px;
+    border-left:5px solid #10b981;
+    padding:20px;
+    display:flex;
+    gap:15px;
+    align-items:center;
+    box-shadow:0 20px 40px rgba(0,0,0,.30);
+    animation:slideToast .5s ease;
+    z-index:9999;
+}
+
+.toast-card i{
+    font-size:28px;
+    color:#10b981;
+}
+
+@keyframes slideToast{
+    from{
+        opacity:0;
+        transform:translateX(100%);
+    }
+    to{
+        opacity:1;
+        transform:translateX(0);
+    }
+}
+
+/*==============================
+Custom Scrollbar
+==============================*/
+
+::-webkit-scrollbar{
+    width:10px;
+}
+
+::-webkit-scrollbar-track{
+    background:#0b1220;
+}
+
+::-webkit-scrollbar-thumb{
+    background:linear-gradient(#6366f1,#9333ea);
+    border-radius:20px;
+}
+
+::-webkit-scrollbar-thumb:hover{
+    background:linear-gradient(#7c3aed,#4f46e5);
+}
+
+/*==============================
+Page Animation
+==============================*/
+
+.page-animation{
+    animation:pageFade .6s ease;
+}
+
+@keyframes pageFade{
+
+    from{
+        opacity:0;
+        transform:translateY(25px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+
+}
+
+/*==============================
+Hover Lift
+==============================*/
+
+.hover-lift{
+    transition:.35s;
+}
+
+.hover-lift:hover{
+    transform:translateY(-8px);
+}
+
+/*==============================
+Glow Border
+==============================*/
+
+.glow-border{
+    position:relative;
+}
+
+.glow-border::before{
+
+content:"";
+
+position:absolute;
+
+inset:-2px;
+
+border-radius:inherit;
+
+background:linear-gradient(
+135deg,
+#6366f1,
+#9333ea,
+#00d4ff
+);
+
+z-index:-1;
+
+filter:blur(18px);
+
+opacity:.45;
+
+}
+
+/*==============================
+Glass Badge
+==============================*/
+
+.glass-badge{
+
+display:inline-flex;
+
+align-items:center;
+
+padding:8px 18px;
+
+border-radius:30px;
+
+background:rgba(255,255,255,.08);
+
+border:1px solid rgba(255,255,255,.08);
+
+font-size:.8rem;
+
+font-weight:600;
+
+}
+
+/*==============================
+Utility Classes
+==============================*/
+
+.mt-10{margin-top:10px;}
+.mt-20{margin-top:20px;}
+.mt-30{margin-top:30px;}
+.mt-40{margin-top:40px;}
+
+.mb-10{margin-bottom:10px;}
+.mb-20{margin-bottom:20px;}
+.mb-30{margin-bottom:30px;}
+.mb-40{margin-bottom:40px;}
+
+.p-20{padding:20px;}
+.p-30{padding:30px;}
+
+.text-center{text-align:center;}
+.text-right{text-align:right;}
+
+.d-flex{display:flex;}
+.align-center{align-items:center;}
+.justify-between{justify-content:space-between;}
+.justify-center{justify-content:center;}
+.flex-column{flex-direction:column;}
+.gap-10{gap:10px;}
+.gap-20{gap:20px;}
+.gap-30{gap:30px;}
+
+.rounded{border-radius:20px;}
+
+.shadow{
+    box-shadow:0 20px 40px rgba(0,0,0,.25);
+}
+
+/*==============================
+Responsive
+==============================*/
+
+@media(max-width:1200px){
+
+.dashboard-grid,
+.analytics-grid,
+.achievement-grid{
+
+grid-template-columns:repeat(2,1fr);
+
+}
+
+}
+
+@media(max-width:991px){
+
+.dashboard-grid,
+.analytics-grid,
+.achievement-grid{
+
+grid-template-columns:1fr;
+
+}
+
+.sidebar{
+
+width:260px;
+
+}
+
+.topbar{
+
+flex-direction:column;
+
+align-items:flex-start;
+
+}
+
+.chart-card,
+.table-card,
+.form-card,
+.profile-card{
+
+padding:25px;
+
+}
+
+}
+
+@media(max-width:768px){
+
+.main-content{
+
+padding:20px;
+
+}
+
+.stat-card{
+
+padding:22px;
+
+}
+
+.stat-value{
+
+font-size:2rem;
+
+}
+
+.profile-avatar{
+
+width:100px;
+
+height:100px;
+
+}
+
+.toast-card{
+
+width:90%;
+
+right:5%;
+
+}
+
+.glass-modal{
+
+padding:25px;
+
+}
+
+}
+
+@media(max-width:576px){
+
+.sidebar{
+
+width:240px;
+
+}
+
+.profile-stats{
+
+flex-direction:column;
+
+gap:15px;
+
+}
+
+.calendar-day{
+
+gap:5px;
+
+}
+
+.calendar-date{
+
+font-size:.85rem;
+
+}
+
+.stat-icon{
+
+width:55px;
+
+height:55px;
+
+font-size:22px;
+
+}
+
+}
+
+/*==============================
+End of Dashboard CSS
+CampusConnect Pro
+Version 1.0
+==============================*/

@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Faculty Coordinator Dashboard | CampusConnect-Pro</title>
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <style>
+    .dashboard-wrapper {
+      display: flex;
+      min-height: 100vh;
+      background: var(--bg-primary);
+    }
+    #reader {
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto;
+      border: 2px dashed rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="dashboard-wrapper">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <i class="fas fa-cubes text-primary"></i>
+        <span>Campus<span class="gradient-text">Connect</span></span>
+      </div>
+      <ul class="sidebar-menu">
+        <li><a href="/dashboards/faculty.html" class="sidebar-link active"><i class="fas fa-th-large"></i> Overview</a></li>
+        <li><a href="/events.html" class="sidebar-link"><i class="fas fa-calendar-alt"></i> Browse Events</a></li>
+        <li><a href="/profile.html" class="sidebar-link"><i class="fas fa-user-cog"></i> Profile Settings</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn btn-outline-glass w-100 text-white" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content flex-grow-1">
+      <!-- Topbar -->
+      <div class="topbar">
+        <div class="topbar-left">
+          <h2 class="fw-bold mb-0 text-white">Coordinator Panel</h2>
+          <p class="text-secondary small mb-0" id="welcome-user">Welcome, Coordinator!</p>
+        </div>
+        <div class="topbar-right">
+          <!-- Profile Box -->
+          <div class="profile-box" onclick="window.location.href='/profile.html'">
+            <img id="topbar-avatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=60" alt="Avatar">
+            <div class="profile-info text-start">
+              <h6 class="mb-0 text-white" id="topbar-username">Dr. John Doe</h6>
+              <span class="small">Faculty Coordinator</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Stats -->
+      <div class="dashboard-grid">
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Managed Events</span>
+            <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+          </div>
+          <div class="stat-value" id="stat-managed">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Checked-in Attendance</span>
+            <div class="stat-icon"><i class="fas fa-user-check"></i></div>
+          </div>
+          <div class="stat-value" id="stat-attendance">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Pending Volunteers</span>
+            <div class="stat-icon"><i class="fas fa-hand-holding-heart"></i></div>
+          </div>
+          <div class="stat-value" id="stat-volunteers">0</div>
+        </div>
+      </div>
+
+      <!-- Main Action Panels -->
+      <div class="row g-4 mb-5">
+        <!-- Managed Events List -->
+        <div class="col-lg-8">
+          <div class="glass-card p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h4 class="fw-bold text-white mb-0"><i class="fas fa-tasks me-2 text-primary"></i>My Managed Events</h4>
+              <button class="btn btn-glow" data-bs-toggle="modal" data-bs-target="#eventModal" onclick="openCreateModal()"><i class="fas fa-plus me-1"></i> Create Event</button>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-dark table-hover align-middle">
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>Date</th>
+                    <th>Capacity</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="managed-events-table">
+                  <tr><td colspan="5" class="text-center text-muted">No managed events yet.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Attendance Scanner & Check-in -->
+        <div class="col-lg-4">
+          <div class="glass-card p-4 h-100 text-center">
+            <h4 class="fw-bold text-white mb-3"><i class="fas fa-qrcode me-2 text-success"></i>Ticket Verification</h4>
+            <p class="text-secondary small mb-4">Scan client registration ticket QR code or input code manually to confirm attendance.</p>
+            
+            <div class="mb-4">
+              <input type="text" id="manual-ticket-code" class="form-control glass-input text-center" placeholder="Enter Registration Ticket ID">
+              <button onclick="verifyTicketManually()" class="btn btn-glow w-100 mt-2">Verify & Check-in</button>
+            </div>
+
+            <div class="border-top border-secondary pt-3">
+              <h6 class="fw-bold text-white mb-2">Camera Scanner</h6>
+              <div id="reader"></div>
+              <button class="btn btn-outline-glass w-100 mt-3" id="start-scanner-btn" onclick="startQRScanner()"><i class="fas fa-camera me-1"></i> Start Camera</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Volunteer Approvals & Gallery Media -->
+      <div class="row g-4">
+        <!-- Volunteer Applications -->
+        <div class="col-lg-6">
+          <div class="glass-card p-4 h-100">
+            <h4 class="fw-bold text-white mb-4"><i class="fas fa-user-friends me-2 text-info"></i>Pending Volunteer Requests</h4>
+            <div class="table-responsive">
+              <table class="table table-dark align-middle">
+                <thead>
+                  <tr>
+                    <th>Student</th>
+                    <th>Event</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="volunteer-table">
+                  <tr><td colspan="3" class="text-center text-muted">No pending requests.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gallery & Media Album Management -->
+        <div class="col-lg-6">
+          <div class="glass-card p-4 h-100">
+            <h4 class="fw-bold text-white mb-4"><i class="fas fa-images me-2 text-accent"></i>Gallery & Media Uploads</h4>
+            <form id="gallery-form" class="row g-3">
+              <div class="col-sm-6">
+                <label class="form-label text-secondary small fw-semibold">Album Name</label>
+                <input type="text" id="gallery-album" class="form-control glass-input" required placeholder="Event Album Name">
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label text-secondary small fw-semibold">Target Event ID</label>
+                <select id="gallery-event-id" class="form-control glass-input" required>
+                  <!-- Populate managed events -->
+                </select>
+              </div>
+              <div class="col-12">
+                <label class="form-label text-secondary small fw-semibold">Photos Upload (Multer)</label>
+                <input type="file" id="gallery-photos" class="form-control glass-input" multiple>
+              </div>
+              <div class="col-12">
+                <label class="form-label text-secondary small fw-semibold">Or Add Video Link (YouTube/Cloudinary)</label>
+                <input type="url" id="gallery-video" class="form-control glass-input" placeholder="https://youtube.com/watch?v=...">
+              </div>
+              <div class="col-12 mt-3">
+                <button type="submit" class="btn btn-glow w-100">Create Album & Upload Files</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Event Modal (Create / Edit) -->
+  <div class="modal fade" id="eventModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content glass-card p-4" style="background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(255,255,255,0.1);">
+        <div class="modal-header border-0">
+          <h4 class="modal-title fw-bold text-white" id="eventModalTitle">Create Event</h4>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="event-form">
+          <input type="hidden" id="event-id">
+          <div class="modal-body row g-3 text-start">
+            <div class="col-md-6">
+              <label class="form-label text-secondary small">Event Title</label>
+              <input type="text" id="event-title" class="form-control glass-input" required placeholder="Event Title">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label text-secondary small">Category</label>
+              <select id="event-category" class="form-control glass-input" required>
+                <option value="Technical">Technical</option>
+                <option value="Cultural">Cultural</option>
+                <option value="Sports">Sports</option>
+                <option value="Workshop">Workshop</option>
+                <option value="Seminar">Seminar</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <label class="form-label text-secondary small">Description</label>
+              <textarea id="event-desc" class="form-control glass-input" rows="3" required placeholder="Detailed description..."></textarea>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label text-secondary small">Speaker / Guest</label>
+              <input type="text" id="event-speaker" class="form-control glass-input" placeholder="Speaker name">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label text-secondary small">Venue</label>
+              <input type="text" id="event-venue" class="form-control glass-input" required placeholder="Auditorium / Lab">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label text-secondary small">Event Date</label>
+              <input type="date" id="event-date" class="form-control glass-input" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label text-secondary small">Event Time</label>
+              <input type="text" id="event-time" class="form-control glass-input" placeholder="09:00 AM" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label text-secondary small">Capacity</label>
+              <input type="number" id="event-capacity" class="form-control glass-input" required min="1" placeholder="100">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label text-secondary small">Registration Deadline</label>
+              <input type="date" id="event-deadline" class="form-control glass-input" required>
+            </div>
+            <div class="col-12">
+              <label class="form-label text-secondary small">Banner Image File</label>
+              <input type="file" id="event-banner-file" class="form-control glass-input">
+            </div>
+          </div>
+          <div class="modal-footer border-0 mt-3">
+            <button type="button" class="btn btn-outline-glass text-white" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-glow">Save Event</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://unpkg.com/html5-qrcode"></script>
+  <script src="/js/theme.js"></script>
+  <script src="/js/main.js"></script>
+  <script>
+    let html5QrcodeScanner;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (!checkAuth(['Faculty Coordinator', 'Admin', 'Super Admin'])) return;
+
+      const user = getCurrentUser();
+      document.getElementById('welcome-user').innerText = `Welcome, ${user.name}!`;
+      document.getElementById('topbar-username').innerText = user.name;
+      if (user.profilePic) {
+        document.getElementById('topbar-avatar').src = user.profilePic;
+      }
+
+      await loadFacultyDashboard();
+
+      // Gallery form submit
+      document.getElementById('gallery-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const albumName = document.getElementById('gallery-album').value;
+        const eventId = document.getElementById('gallery-event-id').value;
+        const photoFiles = document.getElementById('gallery-photos').files;
+        const videoUrl = document.getElementById('gallery-video').value;
+
+        // Create Album
+        try {
+          const res = await fetch(`${API_URL}/gallery`, {
+            method: 'POST',
+            headers: getHeaders(),
+            body: JSON.stringify({ albumName, event: eventId })
+          });
+          const albumData = await res.json();
+          if (albumData.success) {
+            const albumId = albumData.album._id;
+            
+            // Upload Photos if selected
+            if (photoFiles.length > 0) {
+              const formData = new FormData();
+              for (let i = 0; i < photoFiles.length; i++) {
+                formData.append('photos', photoFiles[i]);
+              }
+              await fetch(`${API_URL}/gallery/${albumId}/photos`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${getToken()}` },
+                body: formData
+              });
+            }
+
+            // Upload Video if provided
+            if (videoUrl) {
+              await fetch(`${API_URL}/gallery/${albumId}/videos`, {
+                method: 'POST',
+                headers: getHeaders(),
+                body: JSON.stringify({ videoUrl })
+              });
+            }
+
+            showAlert('Success', 'Album and media uploaded successfully!', 'success').then(() => {
+              document.getElementById('gallery-form').reset();
+            });
+          } else {
+            showAlert('Failed', albumData.message, 'error');
+          }
+        } catch (error) {
+          console.error(error);
+          showAlert('Error', 'Media upload failed.', 'error');
+        }
+      });
+
+      // Event form submit
+      document.getElementById('event-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const eventId = document.getElementById('event-id').value;
+        const title = document.getElementById('event-title').value;
+        const category = document.getElementById('event-category').value;
+        const description = document.getElementById('event-desc').value;
+        const speaker = document.getElementById('event-speaker').value;
+        const venue = document.getElementById('event-venue').value;
+        const date = document.getElementById('event-date').value;
+        const time = document.getElementById('event-time').value;
+        const capacity = document.getElementById('event-capacity').value;
+        const registrationDeadline = document.getElementById('event-deadline').value;
+        const bannerFile = document.getElementById('event-banner-file').files[0];
+
+        const formData = new FormData();
+        formData.append('title', title);
+        formData.append('category', category);
+        formData.append('description', description);
+        formData.append('speaker', speaker);
+        formData.append('venue', venue);
+        formData.append('date', date);
+        formData.append('time', time);
+        formData.append('capacity', capacity);
+        formData.append('registrationDeadline', registrationDeadline);
+        if (bannerFile) {
+          formData.append('banner', bannerFile);
+        }
+
+        const url = eventId ? `${API_URL}/events/${eventId}` : `${API_URL}/events`;
+        const method = eventId ? 'PUT' : 'POST';
+
+        try {
+          const res = await fetch(url, {
+            method,
+            headers: { 'Authorization': `Bearer ${getToken()}` },
+            body: formData
+          });
+          const data = await res.json();
+          if (data.success) {
+            bootstrap.Modal.getInstance(document.getElementById('eventModal')).hide();
+            showAlert('Success', 'Event saved successfully!', 'success');
+            await loadFacultyDashboard();
+          } else {
+            showAlert('Failed', data.message, 'error');
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      });
+    });
+
+    async function loadFacultyDashboard() {
+      try {
+        const res = await fetch(`${API_URL}/dashboards/faculty`, {
+          headers: getHeaders()
+        });
+        const json = await res.json();
+        if (json.success) {
+          const { stats, managedEvents, pendingVolunteers } = json.data;
+
+          document.getElementById('stat-managed').innerText = stats.managedEventsCount || 0;
+          document.getElementById('stat-attendance').innerText = stats.totalAttendeesCount || 0;
+          document.getElementById('stat-volunteers').innerText = stats.pendingVolunteersCount || 0;
+
+          // Render Managed Events
+          const eventsTable = document.getElementById('managed-events-table');
+          const galleryEventSelect = document.getElementById('gallery-event-id');
+          eventsTable.innerHTML = '';
+          galleryEventSelect.innerHTML = '';
+
+          if (managedEvents && managedEvents.length > 0) {
+            managedEvents.forEach(ev => {
+              galleryEventSelect.innerHTML += `<option value="${ev._id}">${ev.title}</option>`;
+              eventsTable.innerHTML += `
+                <tr>
+                  <td><div class="fw-bold text-white">${ev.title}</div></td>
+                  <td>${formatDate(ev.date)}</td>
+                  <td>${ev.availableSeats} / ${ev.capacity}</td>
+                  <td><span class="badge bg-info">${ev.status}</span></td>
+                  <td>
+                    <div class="d-flex gap-2">
+                      <button onclick="editEvent('${ev._id}')" class="btn btn-sm btn-outline-glass text-white"><i class="fas fa-edit"></i></button>
+                      <button onclick="deleteEvent('${ev._id}')" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                    </div>
+                  </td>
+                </tr>
+              `;
+            });
+          } else {
+            eventsTable.innerHTML = `<tr><td colspan="5" class="text-center text-muted">No managed events yet.</td></tr>`;
+          }
+
+          // Render Pending Volunteers
+          const volTable = document.getElementById('volunteer-table');
+          volTable.innerHTML = '';
+          if (pendingVolunteers && pendingVolunteers.length > 0) {
+            pendingVolunteers.forEach(v => {
+              volTable.innerHTML += `
+                <tr>
+                  <td>${v.student ? v.student.name : 'Unknown Student'}</td>
+                  <td>${v.event ? v.event.title : 'Event'}</td>
+                  <td>
+                    <div class="d-flex gap-2">
+                      <button onclick="updateVolunteer('${v._id}', 'Approved')" class="btn btn-sm btn-success"><i class="fas fa-check"></i></button>
+                      <button onclick="updateVolunteer('${v._id}', 'Rejected')" class="btn btn-sm btn-danger"><i class="fas fa-times"></i></button>
+                    </div>
+                  </td>
+                </tr>
+              `;
+            });
+          } else {
+            volTable.innerHTML = `<tr><td colspan="3" class="text-center text-muted">No pending requests.</td></tr>`;
+          }
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    function openCreateModal() {
+      document.getElementById('event-form').reset();
+      document.getElementById('event-id').value = '';
+      document.getElementById('eventModalTitle').innerText = 'Create Event';
+    }
+
+    async function editEvent(id) {
+      try {
+        const res = await fetch(`${API_URL}/events/${id}`);
+        const data = await res.json();
+        if (data.success) {
+          const ev = data.event;
+          document.getElementById('event-id').value = ev._id;
+          document.getElementById('event-title').value = ev.title;
+          document.getElementById('event-category').value = ev.category;
+          document.getElementById('event-desc').value = ev.description;
+          document.getElementById('event-speaker').value = ev.speaker || '';
+          document.getElementById('event-venue').value = ev.venue;
+          document.getElementById('event-date').value = ev.date ? ev.date.split('T')[0] : '';
+          document.getElementById('event-time').value = ev.time || '';
+          document.getElementById('event-capacity').value = ev.capacity;
+          document.getElementById('event-deadline').value = ev.registrationDeadline ? ev.registrationDeadline.split('T')[0] : '';
+
+          document.getElementById('eventModalTitle').innerText = 'Edit Event';
+          const modal = new bootstrap.Modal(document.getElementById('eventModal'));
+          modal.show();
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function deleteEvent(id) {
+      const confirm = await Swal.fire({
+        title: 'Delete Event?',
+        text: 'This will remove the event from database and cancel all tickets.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete',
+        background: '#111126',
+        color: '#fff'
+      });
+
+      if (confirm.isConfirmed) {
+        try {
+          const res = await fetch(`${API_URL}/events/${id}`, {
+            method: 'DELETE',
+            headers: getHeaders()
+          });
+          const data = await res.json();
+          if (data.success) {
+            showAlert('Deleted', 'Event deleted successfully!', 'success');
+            await loadFacultyDashboard();
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    }
+
+    async function updateVolunteer(id, status) {
+      try {
+        const res = await fetch(`${API_URL}/volunteers/approve`, {
+          method: 'POST',
+          headers: getHeaders(),
+          body: JSON.stringify({ applicationId: id, status })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(`Volunteer application ${status.toLowerCase()}!`, 'success');
+          await loadFacultyDashboard();
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    async function verifyTicketManually() {
+      const registrationId = document.getElementById('manual-ticket-code').value;
+      if (!registrationId) {
+        showAlert('Input Required', 'Please enter a ticket code', 'warning');
+        return;
+      }
+      await submitTicketCheckin(registrationId);
+    }
+
+    async function submitTicketCheckin(registrationId) {
+      try {
+        const res = await fetch(`${API_URL}/registrations/scan`, {
+          method: 'POST',
+          headers: getHeaders(),
+          body: JSON.stringify({ registrationId })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showAlert('Checked In!', data.message, 'success');
+          document.getElementById('manual-ticket-code').value = '';
+          await loadFacultyDashboard();
+        } else {
+          showAlert('Failed Check-in', data.message, 'error');
+        }
+      } catch (error) {
+        console.error(error);
+        showAlert('Error', 'Check-in failed.', 'error');
+      }
+    }
+
+    function startQRScanner() {
+      document.getElementById('start-scanner-btn').style.display = 'none';
+      html5QrcodeScanner = new Html5QrcodeScanner(
+        "reader", { fps: 10, qrbox: 250 }
+      );
+      html5QrcodeScanner.render(onScanSuccess, onScanError);
+    }
+
+    async function onScanSuccess(decodedText, decodedResult) {
+      // Typically the ticket contains the registrationId
+      html5QrcodeScanner.clear();
+      document.getElementById('start-scanner-btn').style.display = 'block';
+      await submitTicketCheckin(decodedText);
+    }
+
+    function onScanError(err) {
+      // Silent error logging
+    }
+  </script>
+</body>
+</html>

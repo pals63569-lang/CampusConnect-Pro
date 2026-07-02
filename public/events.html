@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Events Directory | CampusConnect-Pro</title>
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <!-- Glow Backgrounds -->
+  <div class="hero-bg-glow"></div>
+  <div class="hero-bg-glow-2"></div>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg glass-nav navbar-dark py-3">
+    <div class="container">
+      <a class="navbar-brand fw-extrabold fs-3 d-flex align-items-center gap-2" href="/">
+        <i class="fas fa-cubes text-primary"></i>
+        <span>Campus<span class="gradient-text">Connect</span></span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto align-items-center gap-3">
+          <li class="nav-item"><a class="nav-link fw-semibold" href="/">Home</a></li>
+          <li class="nav-item"><a class="nav-link fw-semibold" href="/events.html">Events</a></li>
+          <li class="nav-item">
+            <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle Theme">
+              <i class="fas fa-sun"></i>
+            </button>
+          </li>
+          <div id="navbar-auth-section" class="d-flex align-items-center gap-2 list-unstyled"></div>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Title Banner -->
+  <section class="py-5 text-center">
+    <div class="container">
+      <h1 class="display-4 fw-extrabold mb-2">Campus <span class="gradient-text">Events Directory</span></h1>
+      <p class="text-secondary">Explore tech hackathons, cultural nights, sports meets, and hands-on workshops.</p>
+    </div>
+  </section>
+
+  <!-- Filter & Search Board -->
+  <section class="pb-5">
+    <div class="container">
+      <div class="row g-4">
+        <!-- Sidebar Filters -->
+        <div class="col-lg-3">
+          <div class="glass-card p-4">
+            <h5 class="fw-bold mb-4"><i class="fas fa-sliders-h text-primary me-2"></i> Filter Events</h5>
+            
+            <div class="mb-4">
+              <label class="form-label text-secondary small fw-semibold">Search Keywords</label>
+              <div class="input-group">
+                <span class="input-group-text bg-transparent border-0 text-secondary pe-0"><i class="fas fa-search"></i></span>
+                <input type="text" id="filter-search" class="form-control glass-input" placeholder="Title, speaker...">
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label text-secondary small fw-semibold">Category</label>
+              <select id="filter-category" class="form-select glass-input">
+                <option value="">All Categories</option>
+                <option value="Technical">Technical</option>
+                <option value="Cultural">Cultural</option>
+                <option value="Sports">Sports</option>
+                <option value="Workshop">Workshop</option>
+                <option value="Seminar">Seminar</option>
+              </select>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label text-secondary small fw-semibold">Event Status</label>
+              <select id="filter-status" class="form-select glass-input">
+                <option value="">All Statuses</option>
+                <option value="Registration Open">Registration Open</option>
+                <option value="Closed">Closed</option>
+                <option value="Completed">Completed</option>
+              </select>
+            </div>
+
+            <button id="btn-clear-filters" class="btn btn-outline-glass w-100 btn-sm">Clear All Filters</button>
+          </div>
+        </div>
+
+        <!-- Event Cards List -->
+        <div class="col-lg-9">
+          <div class="row g-4" id="events-grid-container">
+            <!-- Loading Skeletons -->
+            <div class="col-md-6">
+              <div class="glass-card p-3">
+                <div class="skeleton" style="height: 180px; border-radius: 12px; margin-bottom: 15px;"></div>
+                <div class="skeleton" style="height: 20px; width: 40%; margin-bottom: 10px;"></div>
+                <div class="skeleton" style="height: 28px; width: 85%; margin-bottom: 15px;"></div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="glass-card p-3">
+                <div class="skeleton" style="height: 180px; border-radius: 12px; margin-bottom: 15px;"></div>
+                <div class="skeleton" style="height: 20px; width: 40%; margin-bottom: 10px;"></div>
+                <div class="skeleton" style="height: 28px; width: 85%; margin-bottom: 15px;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="text-center py-4 border-top border-secondary bg-secondary-subtle">
+    <p class="mb-0 text-muted small">&copy; 2026 CampusConnect-Pro. All rights reserved.</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="/js/theme.js"></script>
+  <script src="/js/main.js"></script>
+  
+  <script>
+    renderNavbar();
+
+    const gridContainer = document.getElementById('events-grid-container');
+    const searchInput = document.getElementById('filter-search');
+    const categorySelect = document.getElementById('filter-category');
+    const statusSelect = document.getElementById('filter-status');
+    const clearBtn = document.getElementById('btn-clear-filters');
+
+    // Parse URL params for pre-filled filters
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('search')) searchInput.value = urlParams.get('search');
+    if (urlParams.get('category')) categorySelect.value = urlParams.get('category');
+
+    async function fetchEvents() {
+      try {
+        gridContainer.innerHTML = `
+          <div class="col-12 text-center py-5">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="text-secondary mt-2 small">Fetching directory catalog...</p>
+          </div>
+        `;
+
+        const search = searchInput.value;
+        const category = categorySelect.value;
+        const status = statusSelect.value;
+
+        const queryParams = new URLSearchParams();
+        if (search) queryParams.append('search', search);
+        if (category) queryParams.append('category', category);
+        if (status) queryParams.append('status', status);
+
+        const res = await fetch(`${API_URL}/events?${queryParams.toString()}`);
+        const data = await res.json();
+
+        if (data.success && data.events.length > 0) {
+          gridContainer.innerHTML = '';
+          data.events.forEach(event => {
+            const dateStr = formatDate(event.date);
+            const imageSrc = event.banner || 'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=500';
+            
+            gridContainer.innerHTML += `
+              <div class="col-md-6">
+                <div class="glass-card h-100 overflow-hidden d-flex flex-column">
+                  <img src="${imageSrc}" class="card-img-top" alt="${event.title}" style="height: 180px; object-fit: cover;">
+                  <div class="card-body p-4 d-flex flex-column flex-grow-1">
+                    <div class="mb-2">
+                      <span class="category-badge category-${event.category.toLowerCase()}">${event.category}</span>
+                      <span class="badge bg-secondary ms-2">${event.status}</span>
+                    </div>
+                    <h5 class="card-title fw-bold text-white mb-2">${event.title}</h5>
+                    <p class="card-text text-secondary mb-4 small flex-grow-1">${event.description.substring(0, 150)}...</p>
+                    <div class="border-top border-secondary pt-3 mt-auto">
+                      <div class="row g-2 text-muted small mb-3">
+                        <div class="col-6"><i class="far fa-calendar-alt me-1"></i> ${dateStr}</div>
+                        <div class="col-6 text-end"><i class="fas fa-map-marker-alt me-1"></i> ${event.venue}</div>
+                        <div class="col-6"><i class="fas fa-chair me-1"></i> Seats: ${event.availableSeats}/${event.capacity}</div>
+                      </div>
+                      <a href="/event-detail.html?id=${event._id}" class="btn btn-glow w-100 btn-sm">View Details</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            `;
+          });
+        } else {
+          gridContainer.innerHTML = `
+            <div class="col-12 text-center py-5">
+              <i class="far fa-calendar-times fa-3x text-secondary mb-3"></i>
+              <h5 class="fw-bold text-white">No Events Found</h5>
+              <p class="text-secondary small">Try adjusting your filters or search tags.</p>
+            </div>
+          `;
+        }
+      } catch (err) {
+        console.error(err);
+        gridContainer.innerHTML = `<div class="col-12 text-center py-5 text-danger">Failed to connect to events database.</div>`;
+      }
+    }
+
+    // Bind event listeners
+    searchInput.addEventListener('input', debounce(fetchEvents, 300));
+    categorySelect.addEventListener('change', fetchEvents);
+    statusSelect.addEventListener('change', fetchEvents);
+    
+    clearBtn.addEventListener('click', () => {
+      searchInput.value = '';
+      categorySelect.value = '';
+      statusSelect.value = '';
+      fetchEvents();
+    });
+
+    // Helper debounce function
+    function debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+        const later = () => {
+          clearTimeout(timeout);
+          func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+      };
+    }
+
+    // Initial Load
+    fetchEvents();
+  </script>
+</body>
+</html>

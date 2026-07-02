@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Control Center | CampusConnect-Pro</title>
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <style>
+    .dashboard-wrapper {
+      display: flex;
+      min-height: 100vh;
+      background: var(--bg-primary);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="dashboard-wrapper">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <i class="fas fa-cubes text-primary"></i>
+        <span>Campus<span class="gradient-text">Connect</span></span>
+      </div>
+      <ul class="sidebar-menu">
+        <li><a href="/dashboards/admin.html" class="sidebar-link active"><i class="fas fa-th-large"></i> Overview</a></li>
+        <li><a href="/events.html" class="sidebar-link"><i class="fas fa-calendar-alt"></i> Browse Events</a></li>
+        <li><a href="/profile.html" class="sidebar-link"><i class="fas fa-user-cog"></i> Profile Settings</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn btn-outline-glass w-100 text-white" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content flex-grow-1">
+      <!-- Topbar -->
+      <div class="topbar">
+        <div class="topbar-left">
+          <h2 class="fw-bold mb-0 text-white">System Admin Control Center</h2>
+          <p class="text-secondary small mb-0">Manage Users, moderation, global announcements, and reports.</p>
+        </div>
+        <div class="topbar-right">
+          <!-- Profile Box -->
+          <div class="profile-box" onclick="window.location.href='/profile.html'">
+            <img id="topbar-avatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=60" alt="Avatar">
+            <div class="profile-info text-start">
+              <h6 class="mb-0 text-white" id="topbar-username">Super Admin</h6>
+              <span class="small">Super Administrator</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Stats -->
+      <div class="dashboard-grid">
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Total Registered Users</span>
+            <div class="stat-icon"><i class="fas fa-users"></i></div>
+          </div>
+          <div class="stat-value" id="stat-users">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Total Active Events</span>
+            <div class="stat-icon"><i class="fas fa-calendar-week"></i></div>
+          </div>
+          <div class="stat-value" id="stat-events">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Total Registrations</span>
+            <div class="stat-icon"><i class="fas fa-clipboard-list"></i></div>
+          </div>
+          <div class="stat-value" id="stat-regs">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Attendance Ratio</span>
+            <div class="stat-icon"><i class="fas fa-percent"></i></div>
+          </div>
+          <div class="stat-value" id="stat-attendance-ratio">0%</div>
+        </div>
+      </div>
+
+      <!-- Users Tables Tabbed Panel -->
+      <div class="row g-4 mb-5">
+        <div class="col-lg-8">
+          <div class="glass-card p-4 h-100">
+            <ul class="nav nav-tabs border-secondary mb-3" id="usersTab" role="tablist">
+              <li class="nav-item">
+                <button class="nav-link active text-white border-0 bg-transparent" id="students-tab" data-bs-toggle="tab" data-bs-target="#students-pane" type="button" role="tab">Students</button>
+              </li>
+              <li class="nav-item">
+                <button class="nav-link text-white border-0 bg-transparent" id="faculty-tab" data-bs-toggle="tab" data-bs-target="#faculty-pane" type="button" role="tab">Faculty Coordinators</button>
+              </li>
+            </ul>
+
+            <div class="tab-content" id="usersTabContent">
+              <!-- Students Tab -->
+              <div class="tab-pane fade show active" id="students-pane" role="tabpanel">
+                <div class="table-responsive">
+                  <table class="table table-dark table-hover align-middle">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Points</th>
+                        <th>Verification</th>
+                      </tr>
+                    </thead>
+                    <tbody id="students-table-body">
+                      <tr><td colspan="4" class="text-center text-muted">Loading students...</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Faculty Tab -->
+              <div class="tab-pane fade" id="faculty-pane" role="tabpanel">
+                <div class="table-responsive">
+                  <table class="table table-dark table-hover align-middle">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Verification</th>
+                      </tr>
+                    </thead>
+                    <tbody id="faculty-table-body">
+                      <tr><td colspan="3" class="text-center text-muted">Loading faculty...</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Global Announcements creator & Report exports -->
+        <div class="col-lg-4">
+          <!-- Announcements -->
+          <div class="glass-card p-4 mb-4">
+            <h5 class="fw-bold text-white mb-3"><i class="fas fa-bullhorn me-2 text-warning"></i>Broadcast Announcement</h5>
+            <form id="announcement-form">
+              <div class="mb-3">
+                <input type="text" id="ann-title" class="form-control glass-input" required placeholder="Announcement Title">
+              </div>
+              <div class="mb-3">
+                <textarea id="ann-content" class="form-control glass-input" rows="3" required placeholder="Enter message..."></textarea>
+              </div>
+              <div class="mb-3">
+                <select id="ann-color" class="form-control glass-input">
+                  <option value="primary">Indigo Banner</option>
+                  <option value="warning">Warning Yellow Banner</option>
+                  <option value="danger">Danger Red Banner</option>
+                  <option value="success">Success Green Banner</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-glow w-100">Send Announcement</button>
+            </form>
+          </div>
+
+          <!-- Report exports -->
+          <div class="glass-card p-4">
+            <h5 class="fw-bold text-white mb-3"><i class="fas fa-file-download me-2 text-success"></i>System Reports Export</h5>
+            <p class="text-secondary small mb-3">Export spreadsheets or verified lists of participants and events.</p>
+            <div class="d-flex flex-column gap-2">
+              <button onclick="exportData('attendance', 'pdf')" class="btn btn-sm btn-outline-glass text-white"><i class="fas fa-file-pdf text-danger me-1"></i> Attendance Logs (PDF)</button>
+              <button onclick="exportData('registration', 'csv')" class="btn btn-sm btn-outline-glass text-white"><i class="fas fa-file-csv text-success me-1"></i> Registrations Data (CSV)</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Department analytics charts & Activity logs -->
+      <div class="row g-4">
+        <!-- Chart -->
+        <div class="col-lg-6">
+          <div class="glass-card p-4 h-100">
+            <h5 class="fw-bold text-white mb-4"><i class="fas fa-chart-pie me-2 text-primary"></i>Departmental Event Statistics</h5>
+            <div style="position: relative; height:280px; width:100%">
+              <canvas id="deptChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Activity logs -->
+        <div class="col-lg-6">
+          <div class="glass-card p-4 h-100">
+            <h5 class="fw-bold text-white mb-4"><i class="fas fa-history me-2 text-info"></i>System Activity Logs</h5>
+            <div class="list-group list-group-flush" id="activity-logs-list" style="max-height: 280px; overflow-y: auto;">
+              <div class="text-center text-muted small py-4">No recent activity logs.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Charts & Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="/js/theme.js"></script>
+  <script src="/js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (!checkAuth(['Admin', 'Super Admin'])) return;
+
+      const user = getCurrentUser();
+      document.getElementById('topbar-username').innerText = user.name;
+      if (user.profilePic) {
+        document.getElementById('topbar-avatar').src = user.profilePic;
+      }
+
+      await loadAdminDashboard();
+
+      // Form handler
+      document.getElementById('announcement-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const title = document.getElementById('ann-title').value;
+        const content = document.getElementById('ann-content').value;
+        const bannerColor = document.getElementById('ann-color').value;
+
+        try {
+          const res = await fetch(`${API_URL}/notifications/announce`, {
+            method: 'POST',
+            headers: getHeaders(),
+            body: JSON.stringify({ title, content, bannerColor })
+          });
+          const data = await res.json();
+          if (data.success) {
+            showAlert('Success', 'Broadcasted successfully!', 'success');
+            document.getElementById('announcement-form').reset();
+          } else {
+            showAlert('Failed', data.message, 'error');
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      });
+    });
+
+    async function loadAdminDashboard() {
+      try {
+        const res = await fetch(`${API_URL}/dashboards/admin`, {
+          headers: getHeaders()
+        });
+        const json = await res.json();
+        if (json.success) {
+          const { stats, users, deptStats, announcements, activityLogs } = json.data;
+
+          document.getElementById('stat-users').innerText = stats.totalUsersCount || 0;
+          document.getElementById('stat-events').innerText = stats.totalEventsCount || 0;
+          document.getElementById('stat-regs').innerText = stats.totalRegistrationsCount || 0;
+          
+          const ratio = stats.totalRegistrationsCount ? Math.round((stats.checkedInCount / stats.totalRegistrationsCount) * 100) : 0;
+          document.getElementById('stat-attendance-ratio').innerText = `${ratio}%`;
+
+          // Populate Students Table
+          const studentsBody = document.getElementById('students-table-body');
+          studentsBody.innerHTML = '';
+          if (users.students && users.students.length > 0) {
+            users.students.forEach(student => {
+              studentsBody.innerHTML += `
+                <tr>
+                  <td><div class="text-white fw-bold">${student.name}</div></td>
+                  <td>${student.email}</td>
+                  <td><span class="badge bg-success">${student.rewardPoints || 0} pts</span></td>
+                  <td><span class="badge bg-${student.isVerified ? 'success' : 'danger'}">${student.isVerified ? 'Verified' : 'Pending'}</span></td>
+                </tr>
+              `;
+            });
+          } else {
+            studentsBody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">No students registered yet.</td></tr>`;
+          }
+
+          // Populate Faculty Table
+          const facultyBody = document.getElementById('faculty-table-body');
+          facultyBody.innerHTML = '';
+          if (users.faculty && users.faculty.length > 0) {
+            users.faculty.forEach(f => {
+              facultyBody.innerHTML += `
+                <tr>
+                  <td><div class="text-white fw-bold">${f.name}</div></td>
+                  <td>${f.email}</td>
+                  <td><span class="badge bg-${f.isVerified ? 'success' : 'danger'}">${f.isVerified ? 'Verified' : 'Pending'}</span></td>
+                </tr>
+              `;
+            });
+          } else {
+            facultyBody.innerHTML = `<tr><td colspan="3" class="text-center text-muted">No faculty members yet.</td></tr>`;
+          }
+
+          // Render Chart
+          if (deptStats && deptStats.length > 0) {
+            const labels = deptStats.map(d => d.departmentName || 'General');
+            const data = deptStats.map(d => d.eventCount);
+
+            const ctx = document.getElementById('deptChart').getContext('2d');
+            new Chart(ctx, {
+              type: 'bar',
+              data: {
+                labels,
+                datasets: [{
+                  label: 'Number of Events',
+                  data,
+                  backgroundColor: 'rgba(99, 102, 241, 0.6)',
+                  borderColor: 'rgba(99, 102, 241, 1)',
+                  borderWidth: 1
+                }]
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                    ticks: { color: '#a6b0cf' }
+                  },
+                  x: {
+                    ticks: { color: '#a6b0cf' }
+                  }
+                },
+                plugins: {
+                  legend: { labels: { color: '#a6b0cf' } }
+                }
+              }
+            });
+          }
+
+          // Populate Activity Logs
+          const activityBody = document.getElementById('activity-logs-list');
+          activityBody.innerHTML = '';
+          if (activityLogs && activityLogs.length > 0) {
+            activityLogs.forEach(log => {
+              activityBody.innerHTML += `
+                <div class="list-group-item bg-transparent text-secondary border-secondary py-2 small">
+                  <span class="text-white fw-bold">${log.action}</span> - ${log.details}
+                  <div class="text-muted" style="font-size:10px;">${new Date(log.createdAt).toLocaleString()}</div>
+                </div>
+              `;
+            });
+          } else {
+            activityBody.innerHTML = `<div class="text-center text-muted small py-4">No recent activity logs.</div>`;
+          }
+
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function exportData(type, format) {
+      try {
+        const token = getToken();
+        // Redirect directly to download endpoint with auth token in query parameter (or fetch and trigger download blob)
+        // Since it's protected, let's fetch it as a blob and download it.
+        const res = await fetch(`${API_URL}/dashboards/reports?type=${type}&format=${format}`, {
+          headers: getHeaders()
+        });
+        
+        if (res.status === 200) {
+          const blob = await res.blob();
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `${type}_report.${format}`;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+        } else {
+          showAlert('Failed', 'Could not export report data', 'error');
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  </script>
+</body>
+</html>

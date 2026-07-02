@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up | CampusConnect-Pro</title>
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+  <!-- Glow Backgrounds -->
+  <div class="hero-bg-glow"></div>
+  <div class="hero-bg-glow-2"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg glass-nav navbar-dark py-3">
+    <div class="container">
+      <a class="navbar-brand fw-extrabold fs-3 d-flex align-items-center gap-2" href="/">
+        <i class="fas fa-cubes text-primary"></i>
+        <span>Campus<span class="gradient-text">Connect</span></span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Register Form -->
+  <main class="flex-grow-1 d-flex align-items-center py-5">
+    <div class="container" style="max-width: 500px;">
+      <div class="glass-card p-5">
+        <div class="text-center mb-4">
+          <i class="fas fa-user-plus fa-3x text-primary mb-3"></i>
+          <h2 class="fw-bold">Create Account</h2>
+          <p class="text-secondary small">Join the student event directory today.</p>
+        </div>
+
+        <form id="register-form">
+          <div class="mb-3 row g-2">
+            <div class="col-md-6">
+              <label for="register-name" class="form-label text-secondary small fw-semibold">Full Name</label>
+              <input type="text" id="register-name" class="form-control glass-input" placeholder="John Doe" required>
+            </div>
+            <div class="col-md-6">
+              <label for="register-role" class="form-label text-secondary small fw-semibold">Account Role</label>
+              <select id="register-role" class="form-select glass-input" required>
+                <option value="Student" selected>Student</option>
+                <option value="Faculty Coordinator">Faculty Coordinator</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="register-email" class="form-label text-secondary small fw-semibold">College Email Address</label>
+            <input type="email" id="register-email" class="form-control glass-input" placeholder="john@college.edu" required>
+          </div>
+          
+          <div class="mb-3">
+            <label for="register-password" class="form-label text-secondary small fw-semibold">Password</label>
+            <input type="password" id="register-password" class="form-control glass-input" placeholder="••••••••" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="register-department" class="form-label text-secondary small fw-semibold">Academic Department</label>
+            <select id="register-department" class="form-select glass-input" required>
+              <option value="" disabled selected>Loading departments...</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="register-interests" class="form-label text-secondary small fw-semibold">Interests (comma separated)</label>
+            <input type="text" id="register-interests" class="form-control glass-input" placeholder="Coding, Web Development, Design">
+          </div>
+
+          <div class="mb-4">
+            <label for="register-skills" class="form-label text-secondary small fw-semibold">Skills (comma separated)</label>
+            <input type="text" id="register-skills" class="form-control glass-input" placeholder="Javascript, Python, Photoshop">
+          </div>
+
+          <button type="submit" class="btn btn-glow w-100 py-3 mb-3">Sign Up</button>
+        </form>
+
+        <div class="text-center text-secondary small mt-3">
+          Already registered? <a href="/login.html" class="text-primary text-decoration-none fw-semibold">Sign In</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="text-center py-3 border-top border-secondary mt-auto bg-secondary-subtle">
+    <p class="mb-0 text-muted small">&copy; 2026 CampusConnect-Pro. All rights reserved.</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="/js/theme.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/auth.js"></script>
+</body>
+</html>

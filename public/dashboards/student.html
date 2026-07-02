@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard | CampusConnect-Pro</title>
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <style>
+    .dashboard-wrapper {
+      display: flex;
+      min-height: 100vh;
+      background: var(--bg-primary);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="dashboard-wrapper">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <i class="fas fa-cubes text-primary"></i>
+        <span>Campus<span class="gradient-text">Connect</span></span>
+      </div>
+      <ul class="sidebar-menu">
+        <li><a href="/dashboards/student.html" class="sidebar-link active"><i class="fas fa-th-large"></i> Overview</a></li>
+        <li><a href="/events.html" class="sidebar-link"><i class="fas fa-calendar-alt"></i> Browse Events</a></li>
+        <li><a href="/profile.html" class="sidebar-link"><i class="fas fa-user-cog"></i> Profile Settings</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn btn-outline-glass w-100 text-white" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content flex-grow-1">
+      <!-- Topbar -->
+      <div class="topbar">
+        <div class="topbar-left">
+          <h2 class="fw-bold mb-0 text-white">Student Dashboard</h2>
+          <p class="text-secondary small mb-0" id="welcome-user">Welcome back, Student!</p>
+        </div>
+        <div class="topbar-right">
+          <!-- Notification Button -->
+          <div class="notification-btn" id="notif-dropdown-btn">
+            <i class="fas fa-bell text-white"></i>
+            <span class="notification-count" id="notif-count">0</span>
+          </div>
+          <!-- Profile Quickview -->
+          <div class="profile-box" onclick="window.location.href='/profile.html'">
+            <img id="topbar-avatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=60" alt="Avatar">
+            <div class="profile-info text-start">
+              <h6 class="mb-0 text-white" id="topbar-username">Student Name</h6>
+              <span class="small" id="topbar-userpoints">Points: 0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Stats Grid -->
+      <div class="dashboard-grid">
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Registered Events</span>
+            <div class="stat-icon"><i class="fas fa-ticket-alt"></i></div>
+          </div>
+          <div class="stat-value" id="stat-registered">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Attended Events</span>
+            <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+          </div>
+          <div class="stat-value" id="stat-attended">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Quiz Attempts</span>
+            <div class="stat-icon"><i class="fas fa-pen-fancy"></i></div>
+          </div>
+          <div class="stat-value" id="stat-quizzes">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Reward Points</span>
+            <div class="stat-icon"><i class="fas fa-gift text-warning"></i></div>
+          </div>
+          <div class="stat-value" id="stat-points">0</div>
+        </div>
+      </div>
+
+      <!-- Announcements Area -->
+      <div class="row mb-5">
+        <div class="col-12" id="announcements-container"></div>
+      </div>
+
+      <!-- Events lists -->
+      <div class="row g-4 mb-5">
+        <!-- Upcoming Events -->
+        <div class="col-lg-8">
+          <div class="glass-card h-100 p-4">
+            <h4 class="fw-bold mb-4 text-white"><i class="fas fa-calendar-star me-2 text-primary"></i>My Registered Events</h4>
+            <div class="table-responsive">
+              <table class="table table-dark table-hover align-middle">
+                <thead>
+                  <tr>
+                    <th>Event</th>
+                    <th>Date & Time</th>
+                    <th>Venue</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="registered-events-table">
+                  <tr><td colspan="4" class="text-center text-muted">No events registered yet.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Wishlist -->
+        <div class="col-lg-4">
+          <div class="glass-card h-100 p-4">
+            <h4 class="fw-bold mb-4 text-white"><i class="fas fa-heart me-2 text-danger"></i>My Wishlist</h4>
+            <div class="d-flex flex-column gap-3" id="wishlist-container">
+              <div class="text-center text-muted small py-4">Your wishlist is empty.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Leaderboard & Certificates -->
+      <div class="row g-4 mb-5">
+        <!-- Leaderboard -->
+        <div class="col-lg-6">
+          <div class="glass-card p-4 h-100">
+            <h4 class="fw-bold mb-4 text-white"><i class="fas fa-trophy me-2 text-warning"></i>Rewards Leaderboard</h4>
+            <div class="list-group list-group-flush" id="leaderboard-list">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Certificates -->
+        <div class="col-lg-6">
+          <div class="glass-card p-4 h-100">
+            <h4 class="fw-bold mb-4 text-white"><i class="fas fa-award me-2 text-success"></i>My Earned Certificates</h4>
+            <div class="list-group list-group-flush" id="certificates-list">
+              <div class="text-center text-muted small py-4">No certificates earned yet. Attend events or pass event quizzes to earn them!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quiz / Poll Floating Modal Section -->
+      <div class="row g-4">
+        <div class="col-12">
+          <div class="glass-card p-4" id="quizzes-polls-panel">
+            <h4 class="fw-bold mb-4 text-white"><i class="fas fa-laptop-code me-2 text-accent"></i>Active Event Quizzes & Polls</h4>
+            <div class="row" id="active-quiz-poll-container">
+              <div class="text-center text-muted small py-3">Register for events to see related quizzes and track participation polls here.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Notification Dropdown Container -->
+  <div class="glass-card p-3 position-absolute d-none" id="notif-dropdown" style="top: 80px; right: 25px; width: 320px; z-index: 1050; max-height: 400px; overflow-y: auto;">
+    <h6 class="fw-bold border-bottom pb-2 text-white">Notifications</h6>
+    <div id="notif-list" class="d-flex flex-column gap-2"></div>
+  </div>
+
+  <!-- SweetAlert & Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="/js/theme.js"></script>
+  <script src="/js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (!checkAuth(['Student'])) return;
+
+      // Populate user info
+      const user = getCurrentUser();
+      document.getElementById('welcome-user').innerText = `Welcome back, ${user.name}!`;
+      document.getElementById('topbar-username').innerText = user.name;
+      document.getElementById('topbar-userpoints').innerText = `Points: ${user.rewardPoints || 0}`;
+      if (user.profilePic) {
+        document.getElementById('topbar-avatar').src = user.profilePic;
+      }
+
+      await loadDashboardData();
+      await loadNotifications();
+
+      // Notifications dropdown toggle
+      const notifBtn = document.getElementById('notif-dropdown-btn');
+      const notifDropdown = document.getElementById('notif-dropdown');
+      notifBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        notifDropdown.classList.toggle('d-none');
+      });
+      document.addEventListener('click', () => {
+        notifDropdown.classList.add('d-none');
+      });
+    });
+
+    async function loadDashboardData() {
+      try {
+        const res = await fetch(`${API_URL}/dashboards/student`, {
+          headers: getHeaders()
+        });
+        const json = await res.json();
+        if (json.success) {
+          const { stats, upcomingEvents, registeredEvents, certificates, wishlist, leaderboard, activeAnnouncements } = json.data;
+
+          // Render Stats
+          document.getElementById('stat-registered').innerText = stats.registeredEventsCount || 0;
+          document.getElementById('stat-attended').innerText = stats.attendedEventsCount || 0;
+          document.getElementById('stat-quizzes').innerText = stats.quizAttemptsCount || 0;
+          document.getElementById('stat-points').innerText = stats.rewardPoints || 0;
+
+          // Render Announcements
+          const announceContainer = document.getElementById('announcements-container');
+          announceContainer.innerHTML = '';
+          if (activeAnnouncements && activeAnnouncements.length > 0) {
+            activeAnnouncements.forEach(ann => {
+              announceContainer.innerHTML += `
+                <div class="alert alert-${ann.bannerColor || 'info'} glass-card border-0 mb-3 text-white">
+                  <h5 class="fw-bold"><i class="fas fa-bullhorn me-2"></i>${ann.title}</h5>
+                  <p class="mb-0">${ann.content}</p>
+                </div>
+              `;
+            });
+          }
+
+          // Render Registered Events
+          const regEventsTable = document.getElementById('registered-events-table');
+          regEventsTable.innerHTML = '';
+          if (registeredEvents && registeredEvents.length > 0) {
+            registeredEvents.forEach(reg => {
+              const ev = reg.event;
+              if (ev) {
+                regEventsTable.innerHTML += `
+                  <tr>
+                    <td>
+                      <div class="fw-bold text-white">${ev.title}</div>
+                      <span class="badge category-${(ev.category || 'technical').toLowerCase()}">${ev.category}</span>
+                    </td>
+                    <td>${formatDate(ev.date)} @ ${ev.time || 'N/A'}</td>
+                    <td>${ev.venue || 'Campus'}</td>
+                    <td>
+                      <div class="d-flex gap-2">
+                        <a href="/event-detail.html?id=${ev._id}" class="btn btn-sm btn-glow px-3">View Details</a>
+                        ${reg.qrCode ? `<button onclick="showTicket('${reg.qrCode}')" class="btn btn-sm btn-outline-glass text-white"><i class="fas fa-qrcode"></i></button>` : ''}
+                        <button onclick="cancelRegistration('${reg._id}')" class="btn btn-sm btn-danger"><i class="fas fa-times"></i></button>
+                      </div>
+                    </td>
+                  </tr>
+                `;
+              }
+            });
+          } else {
+            regEventsTable.innerHTML = `<tr><td colspan="4" class="text-center text-muted">No events registered yet.</td></tr>`;
+          }
+
+          // Render Wishlist
+          const wishContainer = document.getElementById('wishlist-container');
+          wishContainer.innerHTML = '';
+          if (wishlist && wishlist.length > 0) {
+            wishlist.forEach(ev => {
+              wishContainer.innerHTML += `
+                <div class="d-flex align-items-center justify-content-between p-2 border-bottom border-secondary">
+                  <div>
+                    <a href="/event-detail.html?id=${ev._id}" class="text-white fw-semibold text-decoration-none d-block">${ev.title}</a>
+                    <span class="small text-secondary">${formatDate(ev.date)}</span>
+                  </div>
+                  <button onclick="removeFromWishlist('${ev._id}')" class="btn btn-sm btn-outline-danger border-0"><i class="fas fa-heart-broken"></i></button>
+                </div>
+              `;
+            });
+          } else {
+            wishContainer.innerHTML = `<div class="text-center text-muted small py-4">Your wishlist is empty.</div>`;
+          }
+
+          // Render Leaderboard
+          const leadList = document.getElementById('leaderboard-list');
+          leadList.innerHTML = '';
+          if (leaderboard && leaderboard.length > 0) {
+            leaderboard.forEach((item, index) => {
+              leadList.innerHTML += `
+                <div class="d-flex align-items-center justify-content-between p-2 mb-2 rounded ${index === 0 ? 'bg-warning-subtle text-dark fw-bold' : ''}">
+                  <div class="d-flex align-items-center gap-3">
+                    <span class="fw-extrabold text-primary">${index + 1}</span>
+                    <span>${item.name}</span>
+                  </div>
+                  <span class="badge bg-primary rounded-pill">${item.rewardPoints} pts</span>
+                </div>
+              `;
+            });
+          } else {
+            leadList.innerHTML = `<div class="text-center text-muted small">No participants listed yet.</div>`;
+          }
+
+          // Render Certificates
+          const certsList = document.getElementById('certificates-list');
+          certsList.innerHTML = '';
+          if (certificates && certificates.length > 0) {
+            certificates.forEach(c => {
+              certsList.innerHTML += `
+                <div class="d-flex justify-content-between align-items-center p-2 mb-2 border-bottom border-secondary">
+                  <div>
+                    <div class="fw-bold text-white">${c.event ? c.event.title : 'Certificate'}</div>
+                    <span class="small text-secondary">No: ${c.certificateNumber}</span>
+                  </div>
+                  <a href="${API_URL}/registrations/certificates/${c.certificateNumber}/download" class="btn btn-sm btn-glow"><i class="fas fa-download me-1"></i> PDF</a>
+                </div>
+              `;
+            });
+          } else {
+            certsList.innerHTML = `<div class="text-center text-muted small py-4">No certificates earned yet. Attend events or pass event quizzes to earn!</div>`;
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching dashboard:', error);
+      }
+    }
+
+    async function loadNotifications() {
+      try {
+        const res = await fetch(`${API_URL}/notifications`, { headers: getHeaders() });
+        const json = await res.json();
+        if (json.success) {
+          const count = json.notifications.filter(n => !n.isRead).length;
+          document.getElementById('notif-count').innerText = count;
+
+          const list = document.getElementById('notif-list');
+          list.innerHTML = '';
+          if (json.notifications.length > 0) {
+            json.notifications.forEach(n => {
+              list.innerHTML += `
+                <div class="p-2 rounded border border-secondary mb-2 ${n.isRead ? 'opacity-75' : 'bg-primary-subtle fw-semibold'}" onclick="markAsRead('${n._id}')">
+                  <div class="text-white small mb-1">${n.title}</div>
+                  <div class="text-secondary" style="font-size: 11px;">${n.message}</div>
+                </div>
+              `;
+            });
+          } else {
+            list.innerHTML = `<div class="text-center text-muted small py-2">All caught up!</div>`;
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    async function markAsRead(id) {
+      try {
+        await fetch(`${API_URL}/notifications/${id}/read`, {
+          method: 'PATCH',
+          headers: getHeaders()
+        });
+        await loadNotifications();
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function showTicket(qrDataUrl) {
+      Swal.fire({
+        title: 'Your Event Ticket QR',
+        imageUrl: qrDataUrl,
+        imageWidth: 200,
+        imageHeight: 200,
+        imageAlt: 'Ticket QR',
+        confirmButtonText: 'Close',
+        background: '#111126',
+        color: '#fff'
+      });
+    }
+
+    async function cancelRegistration(regId) {
+      const confirm = await Swal.fire({
+        title: 'Cancel Registration?',
+        text: 'Are you sure you want to cancel your event seat?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, cancel it',
+        background: '#111126',
+        color: '#fff'
+      });
+
+      if (confirm.isConfirmed) {
+        try {
+          const res = await fetch(`${API_URL}/registrations/${regId}/cancel`, {
+            method: 'POST',
+            headers: getHeaders()
+          });
+          const data = await res.json();
+          if (data.success) {
+            showAlert('Cancelled', 'Your event registration has been cancelled.', 'success');
+            await loadDashboardData();
+          } else {
+            showAlert('Failed', data.message, 'error');
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }
+
+    async function removeFromWishlist(eventId) {
+      try {
+        const res = await fetch(`${API_URL}/events/${eventId}/wishlist`, {
+          method: 'POST',
+          headers: getHeaders()
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(data.message, 'success');
+          await loadDashboardData();
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  </script>
+</body>
+</html>

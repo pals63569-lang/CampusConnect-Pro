@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile | CampusConnect-Pro</title>
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+  <!-- Glow Backgrounds -->
+  <div class="hero-bg-glow"></div>
+  <div class="hero-bg-glow-2"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg glass-nav navbar-dark py-3">
+    <div class="container">
+      <a class="navbar-brand fw-extrabold fs-3 d-flex align-items-center gap-2" href="/">
+        <i class="fas fa-cubes text-primary"></i>
+        <span>Campus<span class="gradient-text">Connect</span></span>
+      </a>
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-collapse justify-content-end navbar-nav ms-auto gap-2" id="navbar-auth-section">
+          <!-- Dynamically populated -->
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Profile main content -->
+  <main class="flex-grow-1 py-5">
+    <div class="container" style="max-width: 900px;">
+      <div class="row g-4">
+        
+        <!-- Left Column: Avatar & Summary -->
+        <div class="col-md-4">
+          <div class="glass-card text-center p-4 h-100 d-flex flex-column justify-content-center align-items-center">
+            <div class="position-relative mb-3">
+              <img id="profile-avatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=60" alt="Avatar" class="rounded-circle border border-primary border-3" style="width: 130px; height: 130px; object-fit: cover;">
+            </div>
+            <h4 id="profile-user-name" class="fw-bold mb-1">Loading...</h4>
+            <span id="profile-user-role" class="badge bg-primary mb-3">Role</span>
+            <div class="w-100 text-start mt-3 border-top border-secondary pt-3">
+              <div class="d-flex justify-content-between mb-2">
+                <span class="text-secondary small">Email:</span>
+                <span id="profile-user-email" class="small fw-semibold text-wrap">loading...</span>
+              </div>
+              <div class="d-flex justify-content-between">
+                <span class="text-secondary small">Reward Points:</span>
+                <span id="profile-user-points" class="small fw-bold text-success">0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Settings tabs -->
+        <div class="col-md-8">
+          <div class="glass-card p-4">
+            <ul class="nav nav-tabs border-secondary mb-4" id="profileTab" role="tablist">
+              <li class="nav-item">
+                <button class="nav-link active text-white border-0 bg-transparent" id="details-tab" data-bs-toggle="tab" data-bs-target="#details-pane" type="button" role="tab">Personal Details</button>
+              </li>
+              <li class="nav-item">
+                <button class="nav-link text-white border-0 bg-transparent" id="password-tab" data-bs-toggle="tab" data-bs-target="#password-pane" type="button" role="tab">Change Password</button>
+              </li>
+            </ul>
+
+            <div class="tab-content" id="profileTabContent">
+              <!-- Personal Details Pane -->
+              <div class="tab-pane fade show active" id="details-pane" role="tabpanel">
+                <form id="profile-update-form">
+                  <div class="row g-3">
+                    <div class="col-sm-6">
+                      <label class="form-label text-secondary small fw-semibold">Full Name</label>
+                      <input type="text" id="update-name" class="form-control glass-input" required placeholder="Your Name">
+                    </div>
+                    <div class="col-sm-6">
+                      <label class="form-label text-secondary small fw-semibold">Avatar Image</label>
+                      <input type="file" id="update-avatar-file" class="form-control glass-input">
+                    </div>
+                    <div class="col-12">
+                      <label class="form-label text-secondary small fw-semibold">Interests (Comma separated)</label>
+                      <input type="text" id="update-interests" class="form-control glass-input" placeholder="e.g. Coding, Robotics, Photography">
+                    </div>
+                    <div class="col-12">
+                      <label class="form-label text-secondary small fw-semibold">Skills (Comma separated)</label>
+                      <input type="text" id="update-skills" class="form-control glass-input" placeholder="e.g. Javascript, Public Speaking, Designing">
+                    </div>
+                    <div class="col-12 mt-4">
+                      <button type="submit" class="btn btn-glow py-3 px-4">Update Profile</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+              <!-- Change Password Pane -->
+              <div class="tab-pane fade" id="password-pane" role="tabpanel">
+                <form id="password-change-form">
+                  <div class="row g-3">
+                    <div class="col-12">
+                      <label class="form-label text-secondary small fw-semibold">Current Password</label>
+                      <input type="password" id="current-password" class="form-control glass-input" required placeholder="••••••••">
+                    </div>
+                    <div class="col-12">
+                      <label class="form-label text-secondary small fw-semibold">New Password</label>
+                      <input type="password" id="new-password" class="form-control glass-input" required placeholder="••••••••">
+                    </div>
+                    <div class="col-12 mt-4">
+                      <button type="submit" class="btn btn-glow py-3 px-4">Update Password</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <footer class="text-center py-3 border-top border-secondary mt-auto bg-secondary-subtle">
+    <p class="mb-0 text-muted small">&copy; 2026 CampusConnect-Pro. All rights reserved.</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="/js/theme.js"></script>
+  <script src="/js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Auth check
+      if (!getToken() || !getCurrentUser()) {
+        window.location.href = '/login.html';
+        return;
+      }
+
+      renderNavbar();
+
+      const user = getCurrentUser();
+      
+      // Populate fields
+      document.getElementById('profile-user-name').innerText = user.name;
+      document.getElementById('profile-user-role').innerText = user.role;
+      document.getElementById('profile-user-email').innerText = user.email;
+      document.getElementById('profile-user-points').innerText = user.rewardPoints || 0;
+      if (user.profilePic) {
+        document.getElementById('profile-avatar').src = user.profilePic;
+      }
+      
+      document.getElementById('update-name').value = user.name;
+      document.getElementById('update-interests').value = (user.interests || []).join(', ');
+      document.getElementById('update-skills').value = (user.skills || []).join(', ');
+
+      // Profile Update handler
+      document.getElementById('profile-update-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('update-name').value;
+        const interests = document.getElementById('update-interests').value.split(',').map(s => s.trim()).filter(Boolean);
+        const skills = document.getElementById('update-skills').value.split(',').map(s => s.trim()).filter(Boolean);
+        const avatarFile = document.getElementById('update-avatar-file').files[0];
+
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('interests', JSON.stringify(interests));
+        formData.append('skills', JSON.stringify(skills));
+        if (avatarFile) {
+          formData.append('profilePic', avatarFile);
+        }
+
+        try {
+          const res = await fetch(`${API_URL}/auth/profile`, {
+            method: 'PUT',
+            headers: {
+              'Authorization': `Bearer ${getToken()}`
+            },
+            body: formData
+          });
+          const data = await res.json();
+          if (data.success) {
+            setCurrentUser(data.user);
+            showAlert('Success', 'Profile updated successfully!', 'success').then(() => {
+              window.location.reload();
+            });
+          } else {
+            showAlert('Failed', data.message || 'Profile update failed', 'error');
+          }
+        } catch (error) {
+          console.error(error);
+          showAlert('Error', 'An error occurred during profile update', 'error');
+        }
+      });
+
+      // Change Password handler
+      document.getElementById('password-change-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const currentPassword = document.getElementById('current-password').value;
+        const newPassword = document.getElementById('new-password').value;
+
+        try {
+          const res = await fetch(`${API_URL}/auth/change-password`, {
+            method: 'PUT',
+            headers: getHeaders(),
+            body: JSON.stringify({ currentPassword, newPassword })
+          });
+          const data = await res.json();
+          if (data.success) {
+            showAlert('Success', 'Password changed successfully!', 'success').then(() => {
+              document.getElementById('password-change-form').reset();
+            });
+          } else {
+            showAlert('Failed', data.message || 'Password update failed', 'error');
+          }
+        } catch (error) {
+          console.error(error);
+          showAlert('Error', 'An error occurred during password change', 'error');
+        }
+      });
+
+    });
+  </script>
+</body>
+</html>
