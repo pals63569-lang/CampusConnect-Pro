@@ -1,0 +1,14 @@
+node_modules
+npm-debug.log
+.git
+.github
+.env
+.env.local
+.env.development
+.env.production
+tests
+coverage
+tmp
+.gemini
+uploads/*
+!uploads/.gitkeep

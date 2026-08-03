@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: campusconnect-pro:dev
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - MONGODB_URI=mongodb://mongodb:27017/campusconnect_dev
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=dev_super_secret_jwt_key
+      - JWT_REFRESH_SECRET=dev_super_secret_refresh_key
+      - CORS_ORIGIN=*
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - campus_dev_network
+
+  mongodb:
+    image: mongo:6.0
+    container_name: campusconnect_mongodb_dev
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_dev_data:/data/db
+    networks:
+      - campus_dev_network
+
+  redis:
+    image: redis:7-alpine
+    container_name: campusconnect_redis_dev
+    ports:
+      - "6379:6379"
+    networks:
+      - campus_dev_network
+
+networks:
+  campus_dev_network:
+    driver: bridge
+
+volumes:
+  mongo_dev_data:

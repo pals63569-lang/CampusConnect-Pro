@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: campusconnect-ingress
+  namespace: campusconnect
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "20m"
+    nginx.ingress.kubernetes.io/limit-rps: "30"
+spec:
+  tls:
+    - hosts:
+        - api.campusconnect.edu
+      secretName: campusconnect-tls-cert
+  rules:
+    - host: api.campusconnect.edu
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: campusconnect-service
+                port:
+                  number: 80

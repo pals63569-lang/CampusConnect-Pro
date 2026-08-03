@@ -27,7 +27,16 @@ const registrationSchema = new mongoose.Schema({
   reminderSent: {
     type: Boolean,
     default: false,
+  },
+  seatNumber: {
+    type: String,
+    default: '',
   }
 }, { timestamps: true });
 
+// Compound unique index to prevent duplicate registrations and optimize lookup
+registrationSchema.index({ student: 1, event: 1 }, { unique: true });
+registrationSchema.index({ event: 1, status: 1 });
+
 module.exports = mongoose.model('Registration', registrationSchema);
+

@@ -137,8 +137,17 @@ const seedAllData = async () => {
 
     // 7. Seed Events
     console.log('Seeding Events...');
-    const nextWeek = new Date();
-    nextWeek.setDate(nextWeek.getDate() + 7);
+    const day2 = new Date();
+    day2.setDate(day2.getDate() + 2);
+
+    const day4 = new Date();
+    day4.setDate(day4.getDate() + 4);
+
+    // Calculate nearest Saturday dynamically to guarantee weekend highlight verification
+    const culturalDate = new Date();
+    const currentDay = culturalDate.getDay();
+    const daysToWeekend = currentDay === 0 ? 6 : 6 - currentDay; // If Sun, offset is 6. If Wed, offset is 3 (Sat).
+    culturalDate.setDate(culturalDate.getDate() + daysToWeekend);
 
     const events = await Event.insertMany([
       {
@@ -149,13 +158,31 @@ const seedAllData = async () => {
         department: depts[0]._id,
         speaker: 'Sundar Pichai (Dean of Technology)',
         venue: 'Main Auditorium / Computing Labs',
-        date: nextWeek,
+        date: day2,
         time: '09:00 AM',
         capacity: 100,
         availableSeats: 100,
-        registrationDeadline: new Date(nextWeek.getTime() - 24 * 60 * 60 * 1000),
+        registrationDeadline: new Date(day2.getTime() - 24 * 60 * 60 * 1000),
         organizer: faculty._id,
         status: 'Registration Open',
+        isFeatured: true,
+        views: 245,
+        price: 0,
+        mode: 'Offline',
+        averageRating: 4.8,
+        speakerBio: 'Chief Executive Officer of Google and Alphabet, leading with deep vision on Artificial Intelligence development.',
+        speakerImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
+        gallery: [
+          'https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=400',
+          'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400',
+          'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=400'
+        ],
+        agenda: [
+          { time: '09:00 AM', title: 'Opening Keynote & Intro', description: 'Kickstart with general rules rundown, theme reveals, and icebreakers.' },
+          { time: '11:00 AM', title: 'Hacking Sprint 1', description: 'Brainstorm concepts and deploy initial server architectures.' },
+          { time: '04:00 PM', title: 'Mentor Check-in', description: 'Reviews and sanity check guidelines by senior code developers.' },
+          { time: '09:00 AM (Next Day)', title: 'Pitch Deck & Submissions', description: 'Demonstrate functional prototypes to judges for final score reviews.' }
+        ],
         rules: ['Team size: 2-4 members', 'Submissions must be original', 'Use of open-source allowed with citations'],
         faqs: [
           { question: 'Who can participate?', answer: 'All engineering and science students from any campus are welcome.' },
@@ -170,13 +197,17 @@ const seedAllData = async () => {
         department: depts[2]._id,
         speaker: 'Prof. Alan Turing (Robotics Lead)',
         venue: 'Mechanical Block Seminar Room 102',
-        date: new Date(nextWeek.getTime() + 2 * 24 * 60 * 60 * 1000),
+        date: day4,
         time: '02:00 PM',
         capacity: 40,
         availableSeats: 40,
-        registrationDeadline: new Date(nextWeek.getTime() + 24 * 60 * 60 * 1000),
+        registrationDeadline: new Date(day4.getTime() - 24 * 60 * 60 * 1000),
         organizer: faculty._id,
         status: 'Registration Open',
+        views: 120,
+        price: 15,
+        mode: 'Offline',
+        averageRating: 4.2,
         rules: ['Laptops are mandatory', 'Basic Arduino IDE pre-installed'],
         faqs: [
           { question: 'Do we get hardware?', answer: 'Yes, Arduino kits will be loaned to all teams for the workshop duration.' }
@@ -190,14 +221,41 @@ const seedAllData = async () => {
         department: depts[3]._id,
         speaker: 'Dr. A. R. Rahman (Music Guest)',
         venue: 'Campus Open Air Theater (OAT)',
-        date: new Date(nextWeek.getTime() + 5 * 24 * 60 * 60 * 1000),
+        date: culturalDate,
         time: '05:30 PM',
         capacity: 1000,
         availableSeats: 1000,
-        registrationDeadline: new Date(nextWeek.getTime() + 4 * 24 * 60 * 60 * 1000),
+        registrationDeadline: new Date(culturalDate.getTime() - 24 * 60 * 60 * 1000),
         organizer: faculty._id,
         status: 'Registration Open',
+        isTrending: true,
+        views: 580,
+        price: 5,
+        mode: 'Hybrid',
+        averageRating: 4.9,
         rules: ['Carry college ID card', 'Outside guests allowed with entry ticket pass'],
+        faqs: []
+      },
+      {
+        title: 'Tech Talk: Inside AI and Quantum Computing Today',
+        banner: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&auto=format&fit=crop&q=60',
+        description: 'Explore the boundaries of computing with top field scientists. Learn how quantum bits, annealing, and transformer neural networks operate.',
+        category: 'Seminar',
+        department: depts[0]._id,
+        speaker: 'Dr. Richard Feynman (Quantum Physicist)',
+        venue: 'CS Seminar Hall 204',
+        date: new Date(),
+        time: '04:00 PM',
+        capacity: 80,
+        availableSeats: 80,
+        registrationDeadline: new Date(),
+        organizer: faculty._id,
+        status: 'Registration Open',
+        views: 89,
+        price: 0,
+        mode: 'Online',
+        averageRating: 4.5,
+        rules: ['Registration is mandatory', 'Bring college ID card'],
         faqs: []
       }
     ]);

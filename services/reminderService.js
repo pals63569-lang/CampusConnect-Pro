@@ -1,6 +1,5 @@
 const Registration = require('../models/Registration');
 const Event = require('../models/Event');
-const User = require('../models/User');
 const { sendEventReminder } = require('./emailService');
 const Notification = require('../models/Notification');
 
@@ -49,7 +48,10 @@ const checkAndSendReminders = async () => {
   }
 };
 
+const config = require('../config/env');
+
 const startReminderService = () => {
+  if (config.env === 'test') return;
   // Run once immediately on startup
   checkAndSendReminders();
   // Run every 30 minutes
@@ -58,3 +60,4 @@ const startReminderService = () => {
 };
 
 module.exports = { startReminderService };
+

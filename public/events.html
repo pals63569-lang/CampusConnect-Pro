@@ -59,9 +59,10 @@
             
             <div class="mb-4">
               <label class="form-label text-secondary small fw-semibold">Search Keywords</label>
-              <div class="input-group">
-                <span class="input-group-text bg-transparent border-0 text-secondary pe-0"><i class="fas fa-search"></i></span>
-                <input type="text" id="filter-search" class="form-control glass-input" placeholder="Title, speaker...">
+              <div class="search-container-relative">
+                <input type="text" id="filter-search" class="form-control glass-input" placeholder="Title, speaker, venue..." autocomplete="off">
+                <span id="search-spinner" class="search-loader d-none"><i class="fas fa-circle-notch fa-spin"></i></span>
+                <div id="search-suggestions" class="search-suggestions-dropdown d-none"></div>
               </div>
             </div>
 
@@ -78,13 +79,62 @@
             </div>
 
             <div class="mb-4">
-              <label class="form-label text-secondary small fw-semibold">Event Status</label>
-              <select id="filter-status" class="form-select glass-input">
-                <option value="">All Statuses</option>
-                <option value="Registration Open">Registration Open</option>
-                <option value="Closed">Closed</option>
-                <option value="Completed">Completed</option>
+              <label class="form-label text-secondary small fw-semibold">Department</label>
+              <select id="filter-department" class="form-select glass-input">
+                <option value="">All Departments</option>
               </select>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label text-secondary small fw-semibold">Format</label>
+              <select id="filter-mode" class="form-select glass-input">
+                <option value="">All Formats</option>
+                <option value="Online">Online</option>
+                <option value="Offline">Offline</option>
+                <option value="Hybrid">Hybrid</option>
+              </select>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label text-secondary small fw-semibold">Cost</label>
+              <select id="filter-is-free" class="form-select glass-input">
+                <option value="">All Prices</option>
+                <option value="true">Free</option>
+                <option value="false">Paid</option>
+              </select>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label text-secondary small fw-semibold">Venue / Location</label>
+              <input type="text" id="filter-venue" class="form-control glass-input" placeholder="e.g. Auditorium">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label text-secondary small fw-semibold">Start Date</label>
+              <input type="date" id="filter-start-date" class="form-control glass-input">
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label text-secondary small fw-semibold">End Date</label>
+              <input type="date" id="filter-end-date" class="form-control glass-input">
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label text-secondary small fw-semibold">Sort By</label>
+              <select id="filter-sort-by" class="form-select glass-input">
+                <option value="date">Nearest Date First</option>
+                <option value="dateDesc">Furthest Date First</option>
+                <option value="popularity">Popularity (Views)</option>
+                <option value="rating">Average Rating</option>
+                <option value="title">Alphabetical (A-Z)</option>
+              </select>
+            </div>
+
+            <div class="mb-4">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="filter-upcoming">
+                <label class="form-check-label text-secondary small fw-semibold" for="filter-upcoming">Upcoming Only</label>
+              </div>
             </div>
 
             <button id="btn-clear-filters" class="btn btn-outline-glass w-100 btn-sm">Clear All Filters</button>
@@ -132,13 +182,24 @@
     const gridContainer = document.getElementById('events-grid-container');
     const searchInput = document.getElementById('filter-search');
     const categorySelect = document.getElementById('filter-category');
-    const statusSelect = document.getElementById('filter-status');
+    const deptSelect = document.getElementById('filter-department');
+    const modeSelect = document.getElementById('filter-mode');
+    const freeSelect = document.getElementById('filter-is-free');
+    const venueInput = document.getElementById('filter-venue');
+    const startDateInput = document.getElementById('filter-start-date');
+    const endDateInput = document.getElementById('filter-end-date');
+    const sortBySelect = document.getElementById('filter-sort-by');
+    const upcomingToggle = document.getElementById('filter-upcoming');
     const clearBtn = document.getElementById('btn-clear-filters');
 
     // Parse URL params for pre-filled filters
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('search')) searchInput.value = urlParams.get('search');
     if (urlParams.get('category')) categorySelect.value = urlParams.get('category');
+    if (urlParams.get('department')) deptSelect.value = urlParams.get('department');
+    if (urlParams.get('mode')) modeSelect.value = urlParams.get('mode');
+    if (urlParams.get('isFree')) freeSelect.value = urlParams.get('isFree');
+    if (urlParams.get('timeframe') === 'upcoming') upcomingToggle.checked = true;
 
     async function fetchEvents() {
       try {
@@ -151,12 +212,26 @@
 
         const search = searchInput.value;
         const category = categorySelect.value;
-        const status = statusSelect.value;
+        const dept = deptSelect.value;
+        const mode = modeSelect.value;
+        const isFree = freeSelect.value;
+        const venue = venueInput.value;
+        const startDate = startDateInput.value;
+        const endDate = endDateInput.value;
+        const sortBy = sortBySelect.value;
+        const upcoming = upcomingToggle.checked;
 
         const queryParams = new URLSearchParams();
         if (search) queryParams.append('search', search);
         if (category) queryParams.append('category', category);
-        if (status) queryParams.append('status', status);
+        if (dept) queryParams.append('department', dept);
+        if (mode) queryParams.append('mode', mode);
+        if (isFree !== '') queryParams.append('isFree', isFree);
+        if (venue) queryParams.append('venue', venue);
+        if (startDate) queryParams.append('startDate', startDate);
+        if (endDate) queryParams.append('endDate', endDate);
+        if (sortBy) queryParams.append('sortBy', sortBy);
+        if (upcoming) queryParams.append('timeframe', 'upcoming');
 
         const res = await fetch(`${API_URL}/events?${queryParams.toString()}`);
         const data = await res.json();
@@ -167,14 +242,39 @@
             const dateStr = formatDate(event.date);
             const imageSrc = event.banner || 'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=500';
             
+            const isFeatured = event.isFeatured === true;
+            const isTrending = event.isTrending === true;
+
+            let cardClass = '';
+            let overlayHtml = '';
+            let extraBadge = '';
+
+            if (isFeatured) {
+              cardClass = 'featured-card';
+              overlayHtml = '<div class="featured-glow-overlay"></div>';
+              extraBadge = '<span class="badge featured-badge-glow ms-2"><i class="fas fa-star me-1"></i>Featured</span>';
+            } else if (isTrending) {
+              cardClass = 'trending-card';
+              overlayHtml = '<div class="trending-glow-overlay"></div>';
+              extraBadge = '<span class="badge trending-badge-glow ms-2"><i class="fas fa-fire me-1"></i>Trending</span>';
+            }
+
+            if (event.availableSeats === 0) {
+              extraBadge += '<span class="badge bg-danger ms-2"><i class="fas fa-ban me-1"></i>Fully Booked</span>';
+            }
+            
             gridContainer.innerHTML += `
               <div class="col-md-6">
-                <div class="glass-card h-100 overflow-hidden d-flex flex-column">
-                  <img src="${imageSrc}" class="card-img-top" alt="${event.title}" style="height: 180px; object-fit: cover;">
+                <div class="glass-card h-100 overflow-hidden d-flex flex-column ${cardClass}">
+                  <div class="position-relative overflow-hidden" style="height: 180px;">
+                    <img src="${imageSrc}" class="card-img-top w-100 h-100" alt="${event.title}" style="object-fit: cover;">
+                    ${overlayHtml}
+                  </div>
                   <div class="card-body p-4 d-flex flex-column flex-grow-1">
                     <div class="mb-2">
                       <span class="category-badge category-${event.category.toLowerCase()}">${event.category}</span>
                       <span class="badge bg-secondary ms-2">${event.status}</span>
+                      ${extraBadge}
                     </div>
                     <h5 class="card-title fw-bold text-white mb-2">${event.title}</h5>
                     <p class="card-text text-secondary mb-4 small flex-grow-1">${event.description.substring(0, 150)}...</p>
@@ -206,17 +306,126 @@
       }
     }
 
+    const suggestionsContainer = document.getElementById('search-suggestions');
+    const searchSpinner = document.getElementById('search-spinner');
+
+    // Fetch and display search suggestions
+    async function showSuggestions() {
+      const query = searchInput.value.trim();
+      if (query.length < 2) {
+        suggestionsContainer.classList.add('d-none');
+        suggestionsContainer.innerHTML = '';
+        return;
+      }
+
+      searchSpinner.classList.remove('d-none');
+
+      try {
+        const res = await fetch(`${API_URL}/events/suggestions?q=${encodeURIComponent(query)}`);
+        const data = await res.json();
+        
+        searchSpinner.classList.add('d-none');
+
+        if (data.success && data.suggestions.length > 0) {
+          suggestionsContainer.innerHTML = '';
+          suggestionsContainer.classList.remove('d-none');
+          
+          data.suggestions.forEach(item => {
+            const titleHtml = highlightText(item.title, query);
+            const categoryHtml = highlightText(item.category, query);
+            
+            const div = document.createElement('div');
+            div.className = 'suggestion-item';
+            div.innerHTML = `
+              <div>
+                <div class="suggestion-title text-white">${titleHtml}</div>
+                <small class="text-secondary" style="font-size: 0.75rem;">Speaker: ${item.speaker || 'N/A'}</small>
+              </div>
+              <span class="suggestion-meta">${categoryHtml}</span>
+            `;
+            
+            div.addEventListener('click', () => {
+              searchInput.value = item.title;
+              suggestionsContainer.classList.add('d-none');
+              fetchEvents();
+            });
+            
+            suggestionsContainer.appendChild(div);
+          });
+        } else {
+          suggestionsContainer.classList.add('d-none');
+        }
+      } catch (err) {
+        console.error(err);
+        searchSpinner.classList.add('d-none');
+      }
+    }
+
+    function highlightText(text, searchWord) {
+      if (!text || !searchWord) return text || '';
+      const regex = new RegExp(`(${escapeRegExp(searchWord)})`, 'gi');
+      return text.replace(regex, '<span class="highlight-match">$1</span>');
+    }
+
+    function escapeRegExp(string) {
+      return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
     // Bind event listeners
-    searchInput.addEventListener('input', debounce(fetchEvents, 300));
+    searchInput.addEventListener('input', debounce(fetchEvents, 400));
+    searchInput.addEventListener('input', debounce(showSuggestions, 200));
     categorySelect.addEventListener('change', fetchEvents);
-    statusSelect.addEventListener('change', fetchEvents);
+    deptSelect.addEventListener('change', fetchEvents);
+    modeSelect.addEventListener('change', fetchEvents);
+    freeSelect.addEventListener('change', fetchEvents);
+    venueInput.addEventListener('input', debounce(fetchEvents, 400));
+    startDateInput.addEventListener('change', fetchEvents);
+    endDateInput.addEventListener('change', fetchEvents);
+    sortBySelect.addEventListener('change', fetchEvents);
+    upcomingToggle.addEventListener('change', fetchEvents);
     
     clearBtn.addEventListener('click', () => {
       searchInput.value = '';
       categorySelect.value = '';
-      statusSelect.value = '';
+      deptSelect.value = '';
+      modeSelect.value = '';
+      freeSelect.value = '';
+      venueInput.value = '';
+      startDateInput.value = '';
+      endDateInput.value = '';
+      sortBySelect.value = 'date';
+      upcomingToggle.checked = false;
+      suggestionsContainer.classList.add('d-none');
       fetchEvents();
     });
+
+    document.addEventListener('click', (e) => {
+      if (!searchInput.contains(e.target) && !suggestionsContainer.contains(e.target)) {
+        suggestionsContainer.classList.add('d-none');
+      }
+    });
+
+    // Fetch and populate departments list
+    async function loadDepartments() {
+      try {
+        const res = await fetch(`${API_URL}/departments`);
+        const data = await res.json();
+        if (data.success && deptSelect) {
+          deptSelect.innerHTML = '<option value="">All Departments</option>';
+          data.departments.forEach(dept => {
+            deptSelect.innerHTML += `<option value="${dept._id}">${dept.name}</option>`;
+          });
+          
+          const deptParam = urlParams.get('department');
+          if (deptParam) {
+            deptSelect.value = deptParam;
+            fetchEvents();
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load departments', err);
+      }
+    }
 
     // Helper debounce function
     function debounce(func, wait) {
@@ -232,6 +441,7 @@
     }
 
     // Initial Load
+    loadDepartments();
     fetchEvents();
   </script>
 </body>

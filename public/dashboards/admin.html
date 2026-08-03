@@ -99,9 +99,33 @@
               <li class="nav-item">
                 <button class="nav-link text-white border-0 bg-transparent" id="faculty-tab" data-bs-toggle="tab" data-bs-target="#faculty-pane" type="button" role="tab">Faculty Coordinators</button>
               </li>
+              <li class="nav-item">
+                <button class="nav-link text-white border-0 bg-transparent" id="events-tab" data-bs-toggle="tab" data-bs-target="#events-pane" type="button" role="tab">Events Manager</button>
+              </li>
             </ul>
 
             <div class="tab-content" id="usersTabContent">
+              <!-- Events Tab -->
+              <div class="tab-pane fade" id="events-pane" role="tabpanel">
+                <div class="table-responsive">
+                  <table class="table table-dark table-hover align-middle">
+                    <thead>
+                      <tr>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th>Featured</th>
+                        <th>Trending</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="events-table-body">
+                      <tr><td colspan="6" class="text-center text-muted">Loading events catalog...</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
               <!-- Students Tab -->
               <div class="tab-pane fade show active" id="students-pane" role="tabpanel">
                 <div class="table-responsive">
@@ -221,6 +245,7 @@
       }
 
       await loadAdminDashboard();
+      await loadAdminEvents();
 
       // Form handler
       document.getElementById('announcement-form').addEventListener('submit', async (e) => {
@@ -381,6 +406,94 @@
         }
       } catch (err) {
         console.error(err);
+      }
+    }
+
+    async function loadAdminEvents() {
+      try {
+        const res = await fetch(`${API_URL}/events`);
+        const json = await res.json();
+        if (json.success) {
+          const eventsBody = document.getElementById('events-table-body');
+          eventsBody.innerHTML = '';
+          if (json.events && json.events.length > 0) {
+            json.events.forEach(event => {
+              const isFeatured = event.isFeatured === true;
+              const isTrending = event.isTrending === true;
+              eventsBody.innerHTML += `
+                <tr>
+                  <td><div class="text-white fw-bold">${event.title}</div></td>
+                  <td>${event.category}</td>
+                  <td><span class="badge bg-secondary">${event.status}</span></td>
+                  <td>
+                    <span class="badge ${isFeatured ? 'bg-warning text-dark' : 'bg-dark text-muted'}">
+                      ${isFeatured ? 'Featured' : 'Not Featured'}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="badge ${isTrending ? 'bg-danger text-white' : 'bg-dark text-muted'}">
+                      ${isTrending ? 'Trending' : 'Not Trending'}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="d-flex gap-2">
+                      <button onclick="toggleFeatured('${event._id}')" class="btn btn-sm ${isFeatured ? 'btn-outline-warning' : 'btn-glow'}">
+                        ${isFeatured ? 'Unfeature' : 'Feature'}
+                      </button>
+                      <button onclick="toggleTrending('${event._id}')" class="btn btn-sm ${isTrending ? 'btn-outline-danger' : 'btn-glow'}">
+                        ${isTrending ? 'Untrend' : 'Trend'}
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              `;
+            });
+          } else {
+            eventsBody.innerHTML = `<tr><td colspan="6" class="text-center text-muted">No events found.</td></tr>`;
+          }
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function toggleFeatured(id) {
+      try {
+        const res = await fetch(`${API_URL}/events/${id}/featured`, {
+          method: 'PATCH',
+          headers: getHeaders()
+        });
+        const json = await res.json();
+        if (json.success) {
+          showToast(json.message);
+          await loadAdminEvents();
+          await loadAdminDashboard();
+        } else {
+          showAlert('Failed', json.message, 'error');
+        }
+      } catch (err) {
+        console.error(err);
+        showAlert('Error', 'Failed to toggle featured status', 'error');
+      }
+    }
+
+    async function toggleTrending(id) {
+      try {
+        const res = await fetch(`${API_URL}/events/${id}/trending`, {
+          method: 'PATCH',
+          headers: getHeaders()
+        });
+        const json = await res.json();
+        if (json.success) {
+          showToast(json.message);
+          await loadAdminEvents();
+          await loadAdminDashboard();
+        } else {
+          showAlert('Failed', json.message, 'error');
+        }
+      } catch (err) {
+        console.error(err);
+        showAlert('Error', 'Failed to toggle trending status', 'error');
       }
     }
   </script>

@@ -1,17 +1,22 @@
+const ApiResponse = require('../utils/apiResponse');
+
 const authorize = (...roles) => {
   return (req, res, next) => {
     if (!req.user) {
-      return res.status(401).json({ success: false, message: 'Authentication required' });
+      return ApiResponse.error(res, 'Authentication required', [], 401);
     }
 
     if (!roles.includes(req.user.role)) {
-      return res.status(403).json({
-        success: false,
-        message: `Role (${req.user.role}) is not authorized to access this resource`
-      });
+      return ApiResponse.error(
+        res,
+        `Role (${req.user.role}) is not authorized to access this resource`,
+        [],
+        403
+      );
     }
     next();
   };
 };
 
 module.exports = { authorize };
+

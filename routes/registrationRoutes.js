@@ -7,7 +7,7 @@ const {
   downloadTicket,
   verifyCertificate,
   downloadCertificateByNo,
-} = require('../controllers/registrationController');
+} = require('../src/controllers/registrationController');
 const { protect } = require('../middleware/authMiddleware');
 const { authorize } = require('../middleware/roleMiddleware');
 

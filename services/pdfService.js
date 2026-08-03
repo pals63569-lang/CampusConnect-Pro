@@ -40,7 +40,10 @@ const generateTicketPDF = async (registration, qrDataUrl) => {
 
       doc.fontSize(8).fillColor('#6b7280').text(`Date: ${new Date(registration.event.date).toLocaleDateString()} | Time: ${registration.event.time}`);
       doc.text(`Venue: ${registration.event.venue}`);
-      doc.text(`ID: ${registration._id}`);
+      doc.text(`Ticket ID: ${registration._id}`);
+      if (registration.seatNumber) {
+        doc.text(`Seat Number: ${registration.seatNumber}`);
+      }
       doc.moveDown(0.5);
 
       // Embed QR Code

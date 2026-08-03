@@ -102,54 +102,55 @@ const getAdminDashboard = async (req, res, next) => {
     const totalEvents = await Event.countDocuments();
     const totalRegistrations = await Registration.countDocuments({ status: 'Registered' });
     const totalAttendance = await Attendance.countDocuments();
-    const totalCertificates = await Certificate.countDocuments();
 
-    // Category breakdown
-    const categories = ['Technical', 'Cultural', 'Sports', 'Workshop', 'Seminar'];
-    const categoryCounts = await Promise.all(
-      categories.map(async (cat) => {
-        const count = await Event.countDocuments({ category: cat });
-        return { name: cat, value: count };
-      })
-    );
+    // Query list of students
+    const studentsList = await User.find({ role: 'Student' })
+      .select('name email rewardPoints isVerified')
+      .limit(10);
 
-    // Department breakdown
+    // Query list of faculty coordinators
+    const facultyList = await User.find({ role: 'Faculty Coordinator' })
+      .select('name email isVerified')
+      .limit(10);
+
+    // Department breakdown for chart
     const depts = await Department.find();
-    const departmentCounts = await Promise.all(
+    const deptStats = await Promise.all(
       depts.map(async (d) => {
         const count = await Event.countDocuments({ department: d._id });
-        return { name: d.name, value: count };
+        return { departmentName: d.name, eventCount: count };
       })
     );
 
-    // Recent activity logs (simulated based on registrations and attendance)
+    // Recent activity logs (based on recent registrations)
     const recentRegs = await Registration.find()
       .populate('student', 'name')
       .populate('event', 'title')
       .sort({ createdAt: -1 })
       .limit(5);
 
-    const recentActivities = recentRegs.map(reg => ({
-      description: `${reg.student.name} registered for "${reg.event.title}"`,
-      time: reg.createdAt,
-      type: 'registration'
+    const activityLogs = recentRegs.map(reg => ({
+      action: 'Event Registration',
+      details: `${reg.student ? reg.student.name : 'Unknown Student'} registered for "${reg.event ? reg.event.title : 'Event'}"`,
+      createdAt: reg.createdAt
     }));
 
     res.status(200).json({
       success: true,
-      stats: {
-        totalUsers,
-        totalStudents,
-        totalFaculty,
-        totalVolunteers,
-        totalEvents,
-        totalRegistrations,
-        totalAttendance,
-        totalCertificates,
-      },
-      categoryBreakdown: categoryCounts,
-      departmentBreakdown: departmentCounts,
-      recentActivities
+      data: {
+        stats: {
+          totalUsersCount: totalUsers,
+          totalEventsCount: totalEvents,
+          totalRegistrationsCount: totalRegistrations,
+          checkedInCount: totalAttendance
+        },
+        users: {
+          students: studentsList,
+          faculty: facultyList
+        },
+        deptStats,
+        activityLogs
+      }
     });
   } catch (error) {
     next(error);

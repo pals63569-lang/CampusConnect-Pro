@@ -45,9 +45,17 @@
   <section class="py-5">
     <div class="container">
       <div class="row g-5">
-        <!-- Banner Image -->
+        <!-- Banner Image & Gallery -->
         <div class="col-lg-7">
-          <img id="event-banner" src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1000" alt="Event Banner" class="img-fluid rounded-4 shadow-lg border border-secondary w-100" style="max-height: 400px; object-fit: cover;">
+          <img id="event-banner" src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1000" alt="Event Banner" class="img-fluid rounded-4 shadow-lg border border-secondary w-100 mb-4" style="max-height: 400px; object-fit: cover;">
+          
+          <!-- Event Gallery Container -->
+          <div id="gallery-wrap" class="d-none mt-4">
+            <h5 class="fw-bold text-white mb-3"><i class="fas fa-images text-primary me-2"></i> Event Gallery</h5>
+            <div class="row g-2" id="event-gallery-container">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
         </div>
         
         <!-- Registration Actions & Countdown -->
@@ -80,6 +88,37 @@
               <button id="btn-register" class="btn btn-glow w-100 py-3">Register For Event</button>
               <button id="btn-volunteer" class="btn btn-outline-glass w-100 py-3">Apply to Volunteer</button>
             </div>
+
+            <!-- User Status & Quick Interactions -->
+            <div class="d-flex gap-2 mt-3">
+              <button id="btn-wishlist" class="btn btn-outline-glass flex-grow-1"><i class="far fa-heart me-1"></i> Wishlist</button>
+              <button id="btn-share" class="btn btn-outline-glass flex-grow-1"><i class="fas fa-share-alt me-1"></i> Share</button>
+              <button id="btn-report" class="btn btn-outline-glass text-danger"><i class="fas fa-flag"></i></button>
+            </div>
+
+            <!-- Seat Availability Progress -->
+            <div class="mt-4" id="seats-progress-wrap">
+              <div class="d-flex justify-content-between text-secondary small mb-1">
+                <span>Seat Capacity</span>
+                <span id="seats-pct">0% Full</span>
+              </div>
+              <div class="progress bg-dark" style="height: 8px; border-radius: 4px;">
+                <div id="seats-progress-bar" class="progress-bar bg-danger" role="progressbar" style="width: 0%;"></div>
+              </div>
+              <small class="text-secondary mt-1 d-block" id="seats-left-hint">Only 0 seats left out of 0!</small>
+            </div>
+
+            <!-- QR Preview Container (Initially Hidden) -->
+            <div id="qr-preview-wrap" class="mt-4 p-3 glass-card text-center d-none">
+              <h6 class="text-white small fw-bold mb-2">Your Entry Pass QR Code</h6>
+              <img id="qr-preview-img" src="" alt="QR Pass" class="img-fluid rounded-3 border border-secondary mb-3" style="max-height: 150px;">
+              <div id="ticket-details-block" class="text-start bg-secondary-subtle p-2 rounded-2 small text-secondary mb-3">
+                <div><strong>Ticket ID:</strong> <span id="ticket-id-val" class="text-white"></span></div>
+                <div id="ticket-seat-row" class="d-none"><strong>Assigned Seat:</strong> <span id="ticket-seat-val" class="text-white"></span></div>
+              </div>
+              <small class="text-secondary d-block mt-2">Scan at the venue entrance to check-in.</small>
+              <button id="btn-download-ticket" class="btn btn-outline-glass btn-sm w-100 mt-2"><i class="fas fa-download me-1"></i> Download PDF Ticket</button>
+            </div>
           </div>
         </div>
       </div>
@@ -104,6 +143,9 @@
           <li class="nav-item">
             <button class="nav-link fw-bold text-white bg-transparent border-bottom rounded-0 px-4 py-2" id="forum-tab" data-bs-toggle="pill" data-bs-target="#forum-pane">Discussion Board</button>
           </li>
+          <li class="nav-item">
+            <button class="nav-link fw-bold text-white bg-transparent border-bottom rounded-0 px-4 py-2" id="reviews-tab" data-bs-toggle="pill" data-bs-target="#reviews-pane">Reviews & Ratings</button>
+          </li>
         </ul>
 
         <!-- Tab Contents -->
@@ -113,6 +155,63 @@
             <div class="mb-4">
               <h4 class="fw-bold mb-3">Event Description</h4>
               <p id="event-description" class="text-secondary">Loading...</p>
+            </div>
+            
+            <!-- Agenda / Timeline -->
+            <div class="mb-4 d-none" id="agenda-wrap">
+              <h5 class="fw-bold text-white mb-3"><i class="fas fa-stream text-primary me-2"></i> Event Agenda / Timeline</h5>
+              <div class="ps-3 border-start border-secondary py-1" id="event-agenda-timeline">
+                <!-- Rendered dynamically -->
+              </div>
+            </div>
+
+            <!-- Speaker Details -->
+            <div class="mb-4 d-none" id="speaker-card-wrap">
+              <h5 class="fw-bold text-white mb-3"><i class="fas fa-microphone text-primary me-2"></i> Meet the Speaker</h5>
+              <div class="glass-card p-3 d-flex align-items-center gap-3">
+                <img id="speaker-img" src="" alt="Speaker" class="rounded-circle border border-secondary" style="width: 70px; height: 70px; object-fit: cover;">
+                <div>
+                  <h6 id="speaker-name-card" class="text-white fw-bold mb-1">Speaker Name</h6>
+                  <p id="speaker-bio-card" class="text-secondary small mb-0">Speaker bio details...</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Organizer Card -->
+            <div class="mb-4">
+              <h5 class="fw-bold text-white mb-3"><i class="fas fa-id-card text-primary me-2"></i> Organizer Contact</h5>
+              <div class="glass-card p-3 d-flex align-items-center gap-3">
+                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+                  <i class="fas fa-university"></i>
+                </div>
+                <div>
+                  <h6 id="organizer-name" class="text-white fw-bold mb-1">Organizer Name</h6>
+                  <p id="organizer-email" class="text-secondary small mb-0">Organizer email...</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sponsors -->
+            <div class="mb-4 d-none" id="sponsors-wrap">
+              <h5 class="fw-bold text-white mb-3"><i class="fas fa-handshake text-primary me-2"></i> Event Sponsors</h5>
+              <div class="d-flex flex-wrap gap-3" id="event-sponsors-container">
+                <!-- Rendered dynamically -->
+              </div>
+            </div>
+
+            <!-- Venue Map -->
+            <div class="mb-4">
+              <h5 class="fw-bold text-white mb-3"><i class="fas fa-map-marked-alt text-primary me-2"></i> Venue Map / Hall Layout</h5>
+              <div class="glass-card p-3 text-center bg-dark-subtle">
+                <i class="fas fa-compass fa-2x text-secondary mb-2"></i>
+                <h6 id="venue-name-card" class="text-white fw-bold mb-1">Main Hall</h6>
+                <p class="text-secondary small mb-0">Building Room Coordinates: Grid Zone 4-B</p>
+                <div class="border border-secondary rounded-3 mt-3 overflow-hidden" style="height: 140px; background: url('https://images.unsplash.com/photo-1524661135-423995f22d0b?w=600') center; background-size: cover; filter: brightness(0.6);">
+                  <div class="w-100 h-100 d-flex align-items-center justify-content-center">
+                    <span class="badge bg-dark border border-secondary text-white px-3 py-2"><i class="fas fa-map-pin text-danger me-1 text-danger"></i> Located at Campus Hall</span>
+                  </div>
+                </div>
+              </div>
             </div>
             
             <div class="row g-4 mt-2">
@@ -170,13 +269,97 @@
               <div class="spinner-border text-primary" role="status"></div>
             </div>
             <div id="forum-container" class="d-flex flex-column gap-4">
-              <!-- Rendered dynamically -->
+              </div>
+          </div>
+
+          <!-- Reviews & Ratings Tab -->
+          <div class="tab-pane fade" id="reviews-pane">
+            <div class="row g-4">
+              <!-- Left Column: Rating Summary -->
+              <div class="col-md-4">
+                <div class="glass-card p-4 text-center">
+                  <h1 class="fw-extrabold text-white display-3" id="avg-rating-val">0.0</h1>
+                  <div class="text-warning mb-2" id="avg-stars-wrap"></div>
+                  <span class="text-secondary small" id="total-reviews-count">0 reviews</span>
+                </div>
+              </div>
+              
+              <!-- Right Column: Reviews List & Form -->
+              <div class="col-md-8">
+                <!-- Submit Review form -->
+                <div id="submit-review-wrap" class="p-3 border border-secondary rounded-3 mb-4 d-none">
+                  <h5 class="fw-bold text-white mb-3">Leave a Review</h5>
+                  <form id="review-form">
+                    <div class="mb-3">
+                      <label class="form-label text-secondary small fw-semibold">Rating</label>
+                      <select id="review-rating" class="form-select glass-input w-auto" required>
+                        <option value="5">5 Stars (Excellent)</option>
+                        <option value="4">4 Stars (Good)</option>
+                        <option value="3">3 Stars (Average)</option>
+                        <option value="2">2 Stars (Fair)</option>
+                        <option value="1">1 Star (Poor)</option>
+                      </select>
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label text-secondary small fw-semibold">Comments</label>
+                      <textarea id="review-comments" class="form-control glass-input" rows="3" placeholder="Share your experience..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-glow btn-sm">Submit Review</button>
+                  </form>
+                </div>
+                
+                <h5 class="fw-bold text-white mb-3">Review History</h5>
+                <div id="reviews-list-container" class="d-flex flex-column gap-3 text-secondary">
+                  <!-- Dynamic reviews -->
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </section>
+
+  <!-- Similar Events -->
+  <section class="py-5 border-top border-secondary bg-dark-subtle">
+    <div class="container">
+      <h4 class="fw-bold text-white mb-4"><i class="fas fa-magic text-primary me-2"></i> You May Also Like</h4>
+      <div class="row g-4" id="similar-events-container">
+        <!-- Dynamic recommendations -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Report Modal -->
+  <div class="modal fade" id="reportModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content bg-dark border border-secondary text-white">
+        <div class="modal-header border-secondary">
+          <h5 class="modal-title fw-bold text-danger"><i class="fas fa-flag me-2"></i> Report Event Violation</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="report-form">
+            <div class="mb-3">
+              <label class="form-label text-secondary small fw-semibold">Reason for Report</label>
+              <select id="report-reason" class="form-select glass-input" required>
+                <option value="Inappropriate Content">Inappropriate Content</option>
+                <option value="Fake Event">Fake Event / Spam</option>
+                <option value="Copyright Issue">Copyright Issue</option>
+                <option value="Rules Violation">Rules Violation</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label text-secondary small fw-semibold">Additional Details</label>
+              <textarea id="report-comments" class="form-control glass-input" rows="3" placeholder="Provide extra context..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-danger w-100 py-2">Submit Report</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Footer -->
   <footer class="text-center py-4 border-top border-secondary bg-secondary-subtle">
@@ -203,6 +386,9 @@
     let activeEvent = null;
     let userRegistration = null;
 
+    let isWished = false;
+    let isAttended = false;
+
     async function loadEventDetails() {
       try {
         const res = await fetch(`${API_URL}/events/${eventId}`);
@@ -210,7 +396,29 @@
 
         if (data.success) {
           activeEvent = data.event;
-          userRegistration = data.registration;
+
+          // Fetch user status if user is logged in
+          if (user) {
+            try {
+              const statusRes = await fetch(`${API_URL}/events/${eventId}/user-status`, { headers: getHeaders() });
+              const statusData = await statusRes.json();
+              if (statusData.success) {
+                isWished = statusData.inWishlist;
+                isAttended = statusData.attended;
+                if (statusData.registrationStatus) {
+                  userRegistration = {
+                    _id: statusData.registrationId,
+                    status: statusData.registrationStatus,
+                    qrCode: statusData.qrCode
+                  };
+                } else {
+                  userRegistration = null;
+                }
+              }
+            } catch (statusErr) {
+              console.error('Failed to load user status', statusErr);
+            }
+          }
 
           // Render Text & Banners
           document.getElementById('event-banner').src = activeEvent.banner || 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1000';
@@ -228,6 +436,123 @@
 
           const statusBadge = document.getElementById('event-status');
           statusBadge.innerText = activeEvent.status;
+
+          // Set up Seat Availability Progress Bar
+          const seatsPctVal = Math.round(((activeEvent.capacity - activeEvent.availableSeats) / activeEvent.capacity) * 100);
+          document.getElementById('seats-pct').innerText = `${seatsPctVal}% Full`;
+          const seatsBar = document.getElementById('seats-progress-bar');
+          seatsBar.style.width = `${seatsPctVal}%`;
+          if (seatsPctVal > 85) {
+            seatsBar.className = 'progress-bar bg-danger';
+          } else if (seatsPctVal > 50) {
+            seatsBar.className = 'progress-bar bg-warning';
+          } else {
+            seatsBar.className = 'progress-bar bg-success';
+          }
+          document.getElementById('seats-left-hint').innerText = `Only ${activeEvent.availableSeats} seats left out of ${activeEvent.capacity}!`;
+
+          // Wishlist UI update
+          const wishlistBtn = document.getElementById('btn-wishlist');
+          if (isWished) {
+            wishlistBtn.innerHTML = `<i class="fas fa-heart text-danger me-1"></i> Wished`;
+          } else {
+            wishlistBtn.innerHTML = `<i class="far fa-heart me-1"></i> Wishlist`;
+          }
+
+          // QR Preview Display
+          const qrWrap = document.getElementById('qr-preview-wrap');
+          if (userRegistration && userRegistration.status === 'Registered') {
+            qrWrap.classList.remove('d-none');
+            document.getElementById('qr-preview-img').src = userRegistration.qrCode || 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' + userRegistration._id;
+            
+            document.getElementById('ticket-id-val').innerText = userRegistration._id;
+            const seatRow = document.getElementById('ticket-seat-row');
+            if (userRegistration.seatNumber) {
+              seatRow.classList.remove('d-none');
+              document.getElementById('ticket-seat-val').innerText = userRegistration.seatNumber;
+            } else {
+              seatRow.classList.add('d-none');
+            }
+
+            document.getElementById('btn-download-ticket').onclick = () => {
+              window.open(`${API_URL}/registrations/${userRegistration._id}/ticket-pdf`, '_blank');
+            };
+          } else {
+            qrWrap.classList.add('d-none');
+          }
+
+          // Organizer Info Display
+          document.getElementById('organizer-name').innerText = activeEvent.organizer ? activeEvent.organizer.name : 'Faculty Activity Coordinator';
+          document.getElementById('organizer-email').innerText = activeEvent.organizer ? activeEvent.organizer.email : 'campusconnect@university.edu';
+
+          // Speaker Details Display
+          const speakerBioWrap = document.getElementById('speaker-card-wrap');
+          if (activeEvent.speakerBio) {
+            speakerBioWrap.classList.remove('d-none');
+            document.getElementById('speaker-name-card').innerText = activeEvent.speaker;
+            document.getElementById('speaker-bio-card').innerText = activeEvent.speakerBio;
+            document.getElementById('speaker-img').src = activeEvent.speakerImage || 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150';
+          } else {
+            speakerBioWrap.classList.add('d-none');
+          }
+
+          // Venue map card name update
+          document.getElementById('venue-name-card').innerText = activeEvent.venue;
+
+          // Event Gallery Display
+          const galleryWrap = document.getElementById('gallery-wrap');
+          const galleryContainer = document.getElementById('event-gallery-container');
+          galleryContainer.innerHTML = '';
+          if (activeEvent.gallery && activeEvent.gallery.length > 0) {
+            galleryWrap.classList.remove('d-none');
+            activeEvent.gallery.forEach(imgUrl => {
+              galleryContainer.innerHTML += `
+                <div class="col-4 col-sm-3 col-md-2">
+                  <a href="${imgUrl}" target="_blank">
+                    <img src="${imgUrl}" alt="Gallery Pic" class="img-fluid rounded border border-secondary shadow-sm" style="height: 60px; width: 100%; object-fit: cover;">
+                  </a>
+                </div>
+              `;
+            });
+          } else {
+            galleryWrap.classList.add('d-none');
+          }
+
+          // Timeline Agenda Display
+          const agendaWrap = document.getElementById('agenda-wrap');
+          const agendaTimeline = document.getElementById('event-agenda-timeline');
+          agendaTimeline.innerHTML = '';
+          if (activeEvent.agenda && activeEvent.agenda.length > 0) {
+            agendaWrap.classList.remove('d-none');
+            activeEvent.agenda.forEach(item => {
+              agendaTimeline.innerHTML += `
+                <div class="mb-3">
+                  <div class="fw-bold text-white small"><i class="far fa-clock text-primary me-2"></i> ${item.time} &mdash; ${item.title}</div>
+                  <div class="text-secondary small ps-4">${item.description}</div>
+                </div>
+              `;
+            });
+          } else {
+            agendaWrap.classList.add('d-none');
+          }
+
+          // Sponsors Display
+          const sponsorsWrap = document.getElementById('sponsors-wrap');
+          const sponsorsContainer = document.getElementById('event-sponsors-container');
+          sponsorsContainer.innerHTML = '';
+          if (activeEvent.sponsors && activeEvent.sponsors.length > 0) {
+            sponsorsWrap.classList.remove('d-none');
+            activeEvent.sponsors.forEach(sponsor => {
+              sponsorsContainer.innerHTML += `
+                <a href="${sponsor.website || '#'}" target="_blank" class="glass-card px-3 py-2 text-white small d-flex align-items-center gap-2 text-decoration-none">
+                  <img src="${sponsor.logo || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=50'}" alt="Sponsor" class="rounded" style="width: 25px; height: 25px; object-fit: cover;">
+                  <span>${sponsor.name}</span>
+                </a>
+              `;
+            });
+          } else {
+            sponsorsWrap.classList.add('d-none');
+          }
 
           // Render Rules
           const rulesWrap = document.getElementById('event-rules');
@@ -290,14 +615,16 @@
           `;
         } else {
           // Cancelled or other status
+          const regBtnText = activeEvent.availableSeats === 0 ? 'Join Waiting List' : 'Register For Event';
           btnWrap.innerHTML = `
-            <button onclick="registerForEvent()" class="btn btn-glow w-100 py-3 mb-2">Register For Event</button>
+            <button onclick="registerForEvent()" class="btn btn-glow w-100 py-3 mb-2">${regBtnText}</button>
             <button onclick="applyVolunteer()" class="btn btn-outline-glass w-100 py-3">Apply to Volunteer</button>
           `;
         }
       } else {
+        const regBtnText = activeEvent.availableSeats === 0 ? 'Join Waiting List' : 'Register For Event';
         btnWrap.innerHTML = `
-          <button onclick="registerForEvent()" class="btn btn-glow w-100 py-3 mb-2">Register For Event</button>
+          <button onclick="registerForEvent()" class="btn btn-glow w-100 py-3 mb-2">${regBtnText}</button>
           <button onclick="applyVolunteer()" class="btn btn-outline-glass w-100 py-3">Apply to Volunteer</button>
         `;
       }
@@ -704,14 +1031,194 @@
     });
 
     // ==========================================
+    // REVIEWS AND RATINGS TAB LOGIC
+    // ==========================================
+    async function loadReviews() {
+      try {
+        const res = await fetch(`${API_URL}/feedbacks/event/${eventId}`, { headers: getHeaders() });
+        const data = await res.json();
+
+        if (data.success) {
+          document.getElementById('avg-rating-val').innerText = data.averageRating.toFixed(1);
+          
+          const starsWrap = document.getElementById('avg-stars-wrap');
+          starsWrap.innerHTML = '';
+          const fullStars = Math.floor(data.averageRating);
+          for (let i = 0; i < 5; i++) {
+            if (i < fullStars) {
+              starsWrap.innerHTML += '<i class="fas fa-star text-warning"></i> ';
+            } else {
+              starsWrap.innerHTML += '<i class="far fa-star text-secondary"></i> ';
+            }
+          }
+
+          document.getElementById('total-reviews-count').innerText = `${data.count} reviews`;
+
+          const submitReviewWrap = document.getElementById('submit-review-wrap');
+          if (user && (userRegistration || isAttended)) {
+            submitReviewWrap.classList.remove('d-none');
+          } else {
+            submitReviewWrap.classList.add('d-none');
+          }
+
+          const listContainer = document.getElementById('reviews-list-container');
+          listContainer.innerHTML = '';
+          if (data.feedbacks && data.feedbacks.length > 0) {
+            data.feedbacks.forEach(fb => {
+              const starsHtml = '<i class="fas fa-star text-warning"></i> '.repeat(fb.rating) + '<i class="far fa-star text-secondary"></i> '.repeat(5 - fb.rating);
+              listContainer.innerHTML += `
+                <div class="p-3 border border-secondary rounded-3 bg-secondary-subtle mb-2">
+                  <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="fw-bold text-white small">${fb.student?.name || 'Anonymous Student'}</span>
+                    <span class="small">${starsHtml}</span>
+                  </div>
+                  <p class="mb-0 text-secondary small">${fb.comments}</p>
+                </div>
+              `;
+            });
+          } else {
+            listContainer.innerHTML = '<div class="text-center py-3 text-secondary small">No reviews written yet for this event.</div>';
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load reviews', err);
+      }
+    }
+
+    // ==========================================
+    // SIMILAR EVENTS SUGGESTIONS
+    // ==========================================
+    async function loadSimilarEvents() {
+      try {
+        const res = await fetch(`${API_URL}/events/${eventId}/similar`);
+        const data = await res.json();
+        
+        const container = document.getElementById('similar-events-container');
+        container.innerHTML = '';
+
+        if (data.success && data.events.length > 0) {
+          data.events.forEach(item => {
+            const dateStr = new Date(item.date).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+            container.innerHTML += `
+              <div class="col-md-4">
+                <div class="glass-card p-3 h-100 d-flex flex-column justify-content-between">
+                  <div>
+                    <img src="${item.banner || 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1000'}" alt="Event Banner" class="img-fluid rounded-3 mb-2 w-100" style="height: 120px; object-fit: cover;">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                      <span class="badge bg-secondary small">${item.category}</span>
+                      <small class="text-secondary">${dateStr}</small>
+                    </div>
+                    <h6 class="fw-bold text-white mb-2 text-truncate">${item.title}</h6>
+                    <p class="text-secondary small mb-3 text-truncate-2">${item.venue}</p>
+                  </div>
+                  <a href="/event-detail.html?id=${item._id}" class="btn btn-outline-glass btn-sm w-100">View Details</a>
+                </div>
+              </div>
+            `;
+          });
+        } else {
+          container.innerHTML = '<div class="col-12 text-center text-secondary small py-4">No matching recommendation events found.</div>';
+        }
+      } catch (err) {
+        console.error('Failed to load similar events', err);
+      }
+    }
+
+    // Bind Wishlist Toggler
+    document.getElementById('btn-wishlist')?.addEventListener('click', async () => {
+      if (!user) return showAlert('Login Required', 'Please sign in to add to wishlist.', 'warning');
+      try {
+        const res = await fetch(`${API_URL}/events/${eventId}/wishlist`, {
+          method: 'POST',
+          headers: getHeaders()
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(data.message);
+          loadEventDetails();
+        } else {
+          showAlert('Error', data.message, 'error');
+        }
+      } catch (err) {
+        console.error('Failed to toggle wishlist', err);
+      }
+    });
+
+    // Bind Share Button
+    document.getElementById('btn-share')?.addEventListener('click', () => {
+      navigator.clipboard.writeText(window.location.href);
+      showToast('Event link copied to clipboard!');
+    });
+
+    // Bind Report Button & Modal submission
+    document.getElementById('btn-report')?.addEventListener('click', () => {
+      if (!user) return showAlert('Login Required', 'Please sign in to report this event.', 'warning');
+      const reportModal = new bootstrap.Modal(document.getElementById('reportModal'));
+      reportModal.show();
+    });
+
+    document.getElementById('report-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const reason = document.getElementById('report-reason').value;
+      const comments = document.getElementById('report-comments').value;
+
+      try {
+        const res = await fetch(`${API_URL}/events/${eventId}/report`, {
+          method: 'POST',
+          headers: getHeaders(),
+          body: JSON.stringify({ reason, comments })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          showAlert('Reported', 'The event has been flagged and submitted to coordinators for audit.', 'success');
+          bootstrap.Modal.getInstance(document.getElementById('reportModal')).hide();
+          document.getElementById('report-form').reset();
+        } else {
+          showAlert('Failed', data.message, 'error');
+        }
+      } catch (err) {
+        console.error('Report submission failed', err);
+      }
+    });
+
+    // Bind Review submission form
+    document.getElementById('review-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const rating = document.getElementById('review-rating').value;
+      const comments = document.getElementById('review-comments').value;
+
+      try {
+        const res = await fetch(`${API_URL}/feedbacks`, {
+          method: 'POST',
+          headers: getHeaders(),
+          body: JSON.stringify({ eventId, rating, comments })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          showAlert('Thank You', data.message, 'success');
+          document.getElementById('review-form').reset();
+          loadReviews();
+        } else {
+          showAlert('Failed', data.message, 'error');
+        }
+      } catch (err) {
+        console.error('Review submission failed', err);
+      }
+    });
+
+    // ==========================================
     // INITIAL SYSTEM triggers
     // ==========================================
     loadEventDetails();
+    loadSimilarEvents();
 
     // Trigger tab-specific loads
     document.getElementById('poll-tab')?.addEventListener('click', loadPolls);
     document.getElementById('quiz-tab')?.addEventListener('click', loadQuizzes);
     document.getElementById('forum-tab')?.addEventListener('click', loadForumPosts);
+    document.getElementById('reviews-tab')?.addEventListener('click', loadReviews);
   </script>
 </body>
 </html>
